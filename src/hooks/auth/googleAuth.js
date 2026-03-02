@@ -68,6 +68,7 @@ const useGoogleAuth = () => {
     const handleSuccess = async (accessToken) => {
         try {
             const res = await fetch(BACKEND_API + `/auth/${accessToken}`);
+            console.log("auth connection: "+res.status)
             const data = await res.json();
             console.log("User Authenticated:", data);
             setLogin(data.name, data.email, data.dp, data._id, data.type, data.team_id);
