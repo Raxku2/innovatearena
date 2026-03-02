@@ -30,7 +30,7 @@ export default function Home() {
   const [progress, setProgress] = useState(25);
   const [step, setStep] = useState(1);
 
-  
+
   const { year, setYear, validYears } = useYearSelector();
   const {
     currentdepartment, setDepartment, validDepartments
@@ -570,8 +570,8 @@ export default function Home() {
                     <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
                       <span>SYSTEM_ID: <span className="text-slate-400">NODE_001_ALPHA</span></span>
                       <div className="flex gap-4">
-                        <a className="hover:text-neon-cyan transition-colors" href="#">TERMS_OF_SERVICE</a>
-                        <a className="hover:text-neon-pink transition-colors" href="#">PRIVACY_PROTOCOL</a>
+                        <a className="hover:text-neon-cyan transition-colors" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
+                        <a className="hover:text-neon-pink transition-colors" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>
                         <a className="hover:text-neon-yellow transition-colors" href="#">SUPPORT_CHANNEL</a>
                       </div>
                     </div>
