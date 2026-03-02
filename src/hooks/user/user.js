@@ -1,0 +1,304 @@
+import { useEventDetailsStore, useUserDetailsStore } from "../../stores";
+import { useUserAuthHook } from "../auth/userAuth";
+import useDepartmentSelector from "../inputs/deptselector";
+import useYearSelector from "../inputs/yearselector";
+
+const useUserDataIO = () => {
+    const { setAppStatus } = useEventDetailsStore();
+    const {
+        userId, userName, department, batch,
+        phone, setUserPhone, partnerName, partneremail,
+        setUserDepartment, setUserBatch, setPartnerStatus,
+        setUserPaernerName, setUserPaernerdp, setUserPaernerId,
+        setUserPaernerEmail, setUserReg, setLogin, email,
+        setPayStatus, settxn
+
+    } = useUserDetailsStore();
+
+    const { currentdepartment } = useDepartmentSelector();
+    const { year } = useYearSelector();
+
+    const { disableLoadingBar,enableLoadingBar } = useEventDetailsStore();
+
+
+    const { setUserToLocalStorage } = useUserAuthHook();
+
+
+    const BACKEND_API = import.meta.env.VITE_BACKEND_API;
+
+    const getFullUserInfo = async () => {
+        if (!userId) {
+            return
+        }
+        // setAppStatus("sync...")
+        try {
+            const res = await fetch(BACKEND_API + `/user/${userId}`);
+
+            if (res.status == 200) {
+
+
+                const data = await res.json();
+                fetch(data.dp);
+
+                setLogin(data.name, data.email, data.dp, data._id, data.type, data.team_id);
+                setUserBatch(data.batch);
+                setPayStatus(data.payment_status);
+                setUserDepartment(data.dept);
+                setUserPhone(data.phone);
+                setUserReg(data.reg_status);
+                setPartnerStatus(data.partnerId ? true : false);
+                setUserPaernerEmail(data.partnerEmail);
+                setUserPaernerId(data.partnerId);
+                setUserPaernerName(data.partnerName);
+                settxn(data.txn);
+
+                setUserToLocalStorage(data)
+            }
+
+            if (res.status == 404) {
+                enableLoadingBar();
+                localStorage.removeItem('userData')
+                window.location.reload();
+            }
+
+            // setAppStatus("data updated")
+
+        } catch (error) {
+            console.error("Profile fetch failed:", error);
+        }
+    }
+
+    const updateUserInfo = async () => {
+        if (!userId) {
+            return
+        }
+        setAppStatus("updating...")
+        try {
+            const res = await fetch(BACKEND_API + `/user/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ // 3. Stringify your data object
+                    "name": userName ?? null,
+                    "dept": currentdepartment ?? null,
+                    "batch": year ?? null,
+                    "phone": phone ?? null,
+                    "reg_status": userName && currentdepartment && year && phone ? true : false
+                })
+            });
+
+            if (res.status == 200) {
+                setAppStatus("input recorded")
+                getFullUserInfo();
+
+            } else if (res.status == 304) {
+                setAppStatus("data matched")
+                getFullUserInfo();
+
+            } else {
+                console.log(res.status);
+
+                setAppStatus("try again")
+
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+        }
+
+    }
+
+    const createPartner = async () => {
+        if (!userId) {
+            return
+        }
+        if (partneremail == email) {
+            setUserPaernerEmail(null);
+            setUserPaernerName(null);
+            disableLoadingBar();
+            return
+        }
+        setAppStatus("updating...")
+        try {
+            const res = await fetch(BACKEND_API + `/user/partner/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "name": partnerName,
+                        "email": partneremail
+                    })
+            });
+
+            if (res.status == 201) {
+                setAppStatus("Partner pached");
+                setPartnerStatus(true);
+                getPartnerInfo();
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                getFullUserInfo();
+                disableLoadingBar()
+
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar();
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+    }
+
+    const getPartnerInfo = async () => {
+        if (!userId) {
+            return
+        }
+        try {
+            const res = await fetch(BACKEND_API + `/user/partner/${partneremail}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (res.status == 200) {
+                const data = await res.json();
+                // console.log(data);
+
+                setPartnerStatus(data._id ? true : false);
+                setUserPaernerEmail(data.email ? data.email : '');
+                setUserPaernerId(data._id ? data._id : '');
+                setUserPaernerName(data.name ? data.name : '');
+                setUserPaernerdp(data.dp ? data.dp : '');
+
+
+                disableLoadingBar()
+
+            } else if (res.status == 304) {
+                setAppStatus("server busy")
+                getFullUserInfo();
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+    }
+
+    const syncPartnerInfo = async () => {
+        if (!userId) {
+            return
+        }
+        setAppStatus("scan...")
+        try {
+            const res = await fetch(BACKEND_API + `/user/partner/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (res.status == 200) {
+                // setPartnerStatus(true);
+                getPartnerInfo()
+                getFullUserInfo();
+                // disableLoadingBar()
+                setAppStatus("Partner scanned");
+
+            } else if (res.status == 304) {
+                setAppStatus("server busy")
+                getFullUserInfo();
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+    }
+
+    const removePartnerInfo = async () => {
+        if (!userId) {
+            return
+        }
+
+        if (!partneremail) {
+            window.location.reload()
+        }
+        setAppStatus("scan...")
+        try {
+
+            const res = await fetch(BACKEND_API + `/user/partner/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (res.status == 204) {
+                setPartnerStatus(false);
+                setUserPaernerEmail(null);
+                setUserPaernerName(null);
+                setUserPaernerId(null);
+                // setPartnerStatus(true);
+                getPartnerInfo();
+                // getFullUserInfo();
+                // disableLoadingBar()
+                setAppStatus("Partner killed");
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                getFullUserInfo();
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+    }
+
+
+    return {
+        getFullUserInfo,
+        updateUserInfo,
+        createPartner,
+        syncPartnerInfo, removePartnerInfo,
+    }
+
+
+}
+
+export {
+    useUserDataIO,
+
+}

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Orbitron:wght@400;500;700;900&amp;family=Share+Tech+Mono&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InnovateArena | The Ultimate Frontend Design Championship by Yantrayodha Club AIEM</title>
+  <meta name="title" content="InnovateArena | The Ultimate Frontend Design Championship by Yantrayodha Club AIEM">
+  <meta name="description"
+    content="Join InnovateArena, the elite 5-hour frontend build sprint at AIEM. Organized by Yantrayodha Club. Build the future of UI/UX using AI tools and raw code.">
+  <meta name="keywords"
+    content="InnovateArena, Yantrayodha Club, AIEM, Frontend Competition, UI/UX Hackathon, Web Design Championship, Abacus Institute, Coding Sprint">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="English">
+  <meta name="author" content="Yantrayodha Club AIEM">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://your-link-here.com/">
+  <meta property="og:title" content="InnovateArena | Where Code Becomes Art">
+  <meta property="og:description"
+    content="The premier battleground for frontend architects. 6 Domains. 5 Hours. Infinite Creativity. Hosted by Yantrayodha Club.">
+  <meta property="og:image" content="https://your-link-here.com/assets/og-banner.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://your-link-here.com/">
+  <meta property="twitter:title" content="InnovateArena | Frontend Championship">
+  <meta property="twitter:description"
+    content="Push the boundaries of UI/UX. No Bootstrap. No limits. Just pure innovation at AIEM.">
+  <meta property="twitter:image" content="https://your-link-here.com/assets/og-banner.jpg">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#040810">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "InnovateArena",
+  "description": "An intense 5-hour intra-college frontend design championship focusing on UI/UX innovation.",
+  "organizer": {
+    "@type": "Organization",
+    "name": "Yantrayodha Club",
+    "url": "https://yyaiem.github.io/yy"
+  },
+  "location": {
+    "@type": "Place",
+    "name": "Abacus Institute of Engineering and Management",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Natungram, Mogra",
+      "addressLocality": "Hooghly",
+      "postalCode": "712148",
+      "addressRegion": "WB",
+      "addressCountry": "IN"
+    }
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "50",
+    "priceCurrency": "INR",
+    "availability": "https://schema.org/InStock"
+  }
+}
+</script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "neon-cyan": "#00f3ff",
+            "neon-pink": "#ff0055",
+            "neon-yellow": "#ffee00",
+            "neon-green": "#00ff9d",
+            "background-deep": "#030508",
+            "surface-hacker": "#0a0f14",
+            "card-dark": "rgba(10, 15, 20, 0.9)",
+            "orange": "#ff6900"
+          },
+          fontFamily: {
+            "display": ["Orbitron", "sans-serif"],
+            "body": ["Space Grotesk", "sans-serif"],
+            "mono": ["Share Tech Mono", "monospace"],
+          },
+          animation: {
+            'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'glitch': 'glitch 1s linear infinite',
+            'scan': 'scan 2s linear infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'loading': 'loading 2s ease-in-out infinite',
+          },
+          keyframes: {
+            glitch: {
+              '2%, 64%': { transform: 'translate(2px,0) skew(0deg)' },
+              '4%, 60%': { transform: 'translate(-2px,0) skew(0deg)' },
+              '62%': { transform: 'translate(0,0) skew(5deg)' },
+            },
+            scan: {
+              '0%': { transform: 'translateY(-100%)' },
+              '100%': { transform: 'translateY(100%)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            loading: {
+              '0%': { width: '0%' },
+              '50%': { width: '75%' },
+              '100%': { width: '75%' },
+            }
+          }
+        },
+      },
+    }
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+</body>
+
+</html>
