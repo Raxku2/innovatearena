@@ -2,6 +2,7 @@ import { useEventDetailsStore, useUserDetailsStore } from "../../stores";
 import { useUserAuthHook } from "../auth/userAuth";
 import useDepartmentSelector from "../inputs/deptselector";
 import useYearSelector from "../inputs/yearselector";
+import { UseStartup } from "../startup/UseStartup";
 
 const useUserDataIO = () => {
     const { setAppStatus } = useEventDetailsStore();
@@ -11,17 +12,18 @@ const useUserDataIO = () => {
         setUserDepartment, setUserBatch, setPartnerStatus,
         setUserPaernerName, setUserPaernerdp, setUserPaernerId,
         setUserPaernerEmail, setUserReg, setLogin, email,
-        setPayStatus, settxn
+        setPayStatus, settxn, userType
 
     } = useUserDetailsStore();
 
     const { currentdepartment } = useDepartmentSelector();
     const { year } = useYearSelector();
 
-    const { disableLoadingBar,enableLoadingBar } = useEventDetailsStore();
+    const { disableLoadingBar, enableLoadingBar } = useEventDetailsStore();
 
 
     const { setUserToLocalStorage } = useUserAuthHook();
+    const { getEventData } = UseStartup();
 
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
@@ -286,13 +288,298 @@ const useUserDataIO = () => {
         }
 
     }
+    const createSchedule = async (title, time) => {
+        if (userType != 'root') {
+            return
+        }
+        if (!title || !time) {
+            console.log('cancel for value');
+
+            return
+        }
+        setAppStatus("creating...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/schedule`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "title": title,
+                        "time": time
+                    })
+            });
+
+            if (res.status == 201) {
+                await getEventData();
+                setAppStatus("Created!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
+    const updateSchedule = async (title, time, sch_id) => {
+        if (userType != 'root') {
+            return
+        }
+        if (!title || !time) {
+            console.log('cancel for value');
+
+            return
+        }
+        setAppStatus("updating...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/schedule/${sch_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "title": title,
+                        "time": time
+                    })
+            });
+
+            if (res.status == 200) {
+                await getEventData();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
+
+
+
+    const deleteSchedule = async (sch_id) => {
+        if (userType != 'root') {
+            return
+        }
+        if (!sch_id) {
+            console.log('cancel for value');
+
+            return
+        }
+        setAppStatus("deleting...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/schedule/${sch_id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (res.status == 204) {
+                await getEventData();
+                setAppStatus("deleted!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
+    // rule
+    const createRule = async (title) => {
+        if (userType != 'root') {
+            return
+        }
+        if (!title) {
+            console.log('cancel for value');
+
+            return
+        }
+        setAppStatus("creating...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/rule`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "title": title,
+                        "description": ""
+                    })
+            });
+
+            if (res.status == 201) {
+                await getEventData();
+                setAppStatus("Created!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
+    const updateRule = async (title, rule_id) => {
+        if (userType != 'root') {
+            return
+        }
+        if (!title) {
+            console.log('cancel for value');
+
+            return
+        }
+        setAppStatus("updating...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/rule/${rule_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "title": title,
+                        "description": ""
+                    })
+            });
+
+            if (res.status == 200) {
+                await getEventData();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
+
+
+
+    const deleteRule = async (rule_id) => {
+        if (userType != 'root') {
+            return
+        }
+        if (!rule_id) {
+            console.log('cancel for value');
+            return
+        }
+        setAppStatus("deleting...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/rule/${rule_id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (res.status == 204) {
+                await getEventData();
+                setAppStatus("deleted!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
 
 
     return {
-        getFullUserInfo,
-        updateUserInfo,
-        createPartner,
+        getFullUserInfo, deleteSchedule,
+        updateUserInfo, updateSchedule,
+        createPartner, createSchedule,
         syncPartnerInfo, removePartnerInfo,
+        createRule, updateRule, deleteRule
     }
 
 

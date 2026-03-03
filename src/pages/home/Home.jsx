@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Landing from './Landing'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores'
-import { DateCounter, Navbar1 } from '../../component';
+import { DateCounter, Navbar1, RuleCard, ScheduleCard } from '../../component';
 import clsx from 'clsx';
 import { useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
 import { useNavigate } from 'react-router'
 
 export default function Home() {
-  const { userType } = useUserDetailsStore();
 
   const {
     dp, userName, email, userId,
@@ -16,15 +15,16 @@ export default function Home() {
     partneremail, team_id, setUserName,
     partner_status, setUserPhone,
     setUserPaernerName, setUserPaernerEmail,
-    txnId
+    txnId, userType
   } = useUserDetailsStore();
 
 
   const navigate = useNavigate();
 
   const {
-    enableLoadingBar, AppStatus
+    enableLoadingBar, AppStatus, rules, schedules
   } = useEventDetailsStore();
+
   const [regCardStatus, setRegCardStatus] = useState(0);
   const [regCardMessage, setRegCardMessage] = useState("");
   const [progress, setProgress] = useState(25);
@@ -47,8 +47,9 @@ export default function Home() {
   const { removeUser } = useUserAuthHook();
 
   const {
-    getFullUserInfo, updateUserInfo,
+    getFullUserInfo, updateUserInfo, createSchedule,
     createPartner, syncPartnerInfo, removePartnerInfo,
+    createRule,
   } = useUserDataIO();
 
   const [modification, setModification] = useState(true);
@@ -98,7 +99,13 @@ export default function Home() {
   }, [registrationStatus, peymentStatus])
 
 
-  const { startRegistrationPayment } = useInnovateArenaPayment();
+  // const { startRegistrationPayment } = useInnovateArenaPayment();
+
+  const [scheduleAddPrompt, setScheduleAddPrompt] = useState(false);
+  const [newScheduleTime, setNewScheduleTime] = useState('');
+  const [newScheduleTitle, setNewScheduleTitle] = useState('');
+  const [ruleAddPrompt, setRuleAddPrompt] = useState(false);
+  const [newRuleTitle, setNewRuleTitle] = useState('');
 
 
   return (
@@ -112,7 +119,7 @@ export default function Home() {
       {userType === 'user' && (
         <div>
           <div className="font-body text-slate-300 antialiased overflow-hidden selection:bg-(--neon-pink) selection:text-white h-screen flex flex-col">
-            <div classNaremoveUserme="fixed inset-0 z-100 crt-overlay pointer-events-none"></div>
+            <div className="fixed inset-0 z-100 crt-overlay pointer-events-none"></div>
             <div className="flex h-full w-full relative z-10">
 
               <aside className="w-full md:w-64 h-full hidden md:flex flex-col bg-black/80 border-r border-slate-800 relative z-20">
@@ -566,6 +573,169 @@ export default function Home() {
                       </button>
 
                     </div>
+
+                    {/* schedule   */}
+
+
+                    <div className="col-span-1 md:col-span-7 glass-panel border border-slate-700/50 rounded-xl p-0 relative overflow-hidden group flex flex-col">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-neon-cyan/5 rounded-full blur-2xl pointer-events-none"></div>
+                      <div className="p-6 border-b border-slate-800 bg-black/20 backdrop-blur-sm flex justify-between items-center z-10">
+                        <div>
+                          <h3 className="text-white font-display font-bold text-sm tracking-widest flex items-center gap-2">
+                            <span className="w-1 h-4 bg-neon-cyan"></span>
+                            SCHEDULE_LOGS
+                          </h3>
+                          <p className="text-[10px] font-mono text-slate-500 mt-1 pl-3">UPCOMING_EVENT_NODES</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="p-6 relative z-10 flex-1 overflow-hidden">
+                        <div className="space-y-3 font-mono text-xs">
+
+                          {/* <ScheduleCard time_prop="10:00" title_prop="Meeting" id_prop="1" /> */}
+
+                          {
+                            schedules.map((e, i) => {
+                              // console.log(e);
+
+                              return (
+                                <ScheduleCard time_prop={e.time} title_prop={e.title} id_prop={e.id} key={i} />
+                              )
+                            })
+
+                          }
+
+
+                        </div>
+                        <button className="mt-6 w-full py-3 border border-dashed border-slate-600 hover:border-neon-cyan text-slate-500 hover:text-neon-cyan text-xs font-mono uppercase transition-all flex items-center justify-center gap-2 group/btn"
+                          onClick={e => setScheduleAddPrompt(true)}
+                          hidden={!(userType == 'root')}
+                        >
+                          <span className="material-symbols-outlined text-sm group-hover/btn:rotate-90 transition-transform">add</span>
+                          INITIALIZE_SCHEDULE
+                        </button>
+                      </div>
+
+
+                      <div hidden={!(userType == 'root')}>
+
+                        <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-8 text-center space-y-6" hidden={!scheduleAddPrompt}>
+
+                          <h4 className="text-white font-display font-bold text-xl tracking-widest text-neon-cyan">CREATE_NODE</h4>
+                          <input className="bg-slate-900 border border-neon-cyan/50 text-white font-mono text-sm px-4 py-2 w-full max-w-xs focus:ring-1 focus:ring-neon-cyan outline-none" type="text" value={newScheduleTime} onChange={e => setNewScheduleTime(e.target.value)} placeholder='> time ?'
+
+                          />
+
+                          <input className="bg-slate-900 border border-neon-cyan/50 text-white font-mono text-sm px-4 py-2 w-full max-w-xs focus:ring-1 focus:ring-neon-cyan outline-none" type="text" value={newScheduleTitle} onChange={e => setNewScheduleTitle(e.target.value)} placeholder='> title ?'
+
+                          />
+
+                          <div className="flex gap-4">
+
+                            <button className="px-4 py-2 border border-neon-green/50 text-neon-green font-mono text-xs uppercase hover:bg-neon-green/10 transition-colors"
+                              onClick={async () => {
+                                await createSchedule(newScheduleTitle, newScheduleTime)
+                                setNewScheduleTime('')
+                                setNewScheduleTitle('')
+                                setScheduleAddPrompt(false)
+                              }}
+
+                            >ADD_SCHEDULE</button>
+
+                            <button className="px-4 py-2 border border-slate-600 text-slate-400 font-mono text-xs uppercase hover:bg-slate-800 transition-colors"
+                              onClick={e => setScheduleAddPrompt(false)}
+                            >DISCARD_DATA</button>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+
+
+                    {/* rules  */}
+                    <div className="col-span-1 md:col-span-5 glass-panel border border-slate-700/50 rounded-xl p-0 relative overflow-hidden group flex flex-col">
+                      <div className="absolute top-0 left-0 w-32 h-32 bg-neon-pink/5 rounded-full blur-2xl pointer-events-none"></div>
+                      <div className="p-6 border-b border-slate-800 bg-black/20 backdrop-blur-sm flex justify-between items-center z-10">
+                        <div>
+                          <h3 className="text-white font-display font-bold text-sm tracking-widest flex items-center gap-2">
+                            <span className="w-1 h-4 bg-neon-pink"></span>
+                            RULE_PROTOCOLS
+                          </h3>
+                          <p className="text-[10px] font-mono text-slate-500 mt-1 pl-3">SYSTEM_CONSTRAINTS</p>
+                        </div>
+                        <span className="material-symbols-outlined text-neon-pink/50 text-xl">security</span>
+                      </div>
+                      <div className="p-6 relative z-10 flex-1 flex flex-col">
+                        <div className="space-y-1 font-mono text-xs flex-1">
+
+
+                          {/* <RuleCard /> */}
+
+                          {
+                            rules.map((e, i) => {
+                              // console.log(e);
+
+                              return (
+                                <RuleCard title_prop={e.title} id_prop={e.id} index_prop={i} key={i} />
+                              )
+                            })
+
+                          }
+
+
+
+                        </div>
+                        <button className="mt-6 w-full py-3 border border-dashed border-slate-600 hover:border-neon-pink text-slate-500 hover:text-neon-pink text-xs font-mono uppercase transition-all flex items-center justify-center gap-2 group/btn" hidden={!(userType == 'root')}
+                          onClick={() => {
+                            setRuleAddPrompt(true);
+                          }}>
+                          <span className="material-symbols-outlined text-sm group-hover/btn:rotate-90 transition-transform">add</span>
+                          INITIALIZE_RULE
+                        </button>
+                      </div>
+
+
+
+                      <div hidden={!(userType == 'root')}>
+
+                        <div className=" inset-0 bg-black/95 backdrop-blur-md z-50 flex flex-col items-center justify-center p-8 text-center space-y-6 absolute transition-opacity duration-300"
+                          hidden={!ruleAddPrompt}
+                        >
+
+                          <h4 className="text-white font-display font-bold text-lg tracking-widest text-neon-pink">EDIT_PROTOCOL_03</h4>
+                          <div className="w-full max-w-xs text-left">
+                            <label className="text-[10px] text-slate-500 font-mono mb-1 block"
+
+                            >RULE_DEFINITION</label>
+                            <input className="w-full bg-slate-900 border border-neon-pink/50 text-white font-mono text-sm px-4 py-2 focus:ring-1 focus:ring-neon-pink outline-none" type="text" value={newRuleTitle} onChange={e => setNewRuleTitle(e.target.value)} placeholder='> rule ?' />
+                          </div>
+                          <div className="flex flex-wrap justify-center gap-3 w-full">
+                            <button className="flex-1 min-w-30 px-4 py-2 border border-neon-green/50 text-neon-green font-mono text-xs uppercase hover:bg-neon-green/10 transition-colors shadow-[0_0_10px_rgba(0,255,157,0.2)] hover:shadow-[0_0_15px_rgba(0,255,157,0.4)]"
+                              onClick={() => {
+                                createRule(newRuleTitle)
+
+                                setRuleAddPrompt(false);
+                              }}
+                            >INSERT_CHANGES</button>
+
+                            <button className="flex-1 min-w-30 px-4 py-2 border border-slate-600 text-slate-400 font-mono text-xs uppercase hover:bg-slate-800 transition-colors"
+                              onClick={() => {
+                                setRuleAddPrompt(false);
+                              }}
+                            >DISCARD_DATA</button>
+
+                          </div>
+                        </div>
+                        <p className="text-[10px] text-slate-600 font-mono mt-4">HOVER_TO_ACTIVATE_EDIT_MODE</p>
+                      </div>
+                    </div>
+
+
 
                     {/* footer sec */}
                     <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
