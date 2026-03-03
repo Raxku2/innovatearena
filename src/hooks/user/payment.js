@@ -11,6 +11,7 @@ const useInnovateArenaPayment = () => {
     const { getFullUserInfo } = useUserDataIO();
 
     const startRegistrationPayment = useCallback(async () => {
+        return
 
         try {
 
