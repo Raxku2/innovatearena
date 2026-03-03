@@ -5,18 +5,26 @@ import { Footer1, Navbar1 } from './component'
 import { AnimatePresence } from 'motion/react'
 import { Link, Route, Routes, useLocation } from "react-router"
 import { useEventDetailsStore } from './stores'
-import { useGoogleAuth, useUserAuthHook } from './hooks'
+import { useGoogleAuth, UseStartup, useUserAuthHook, useUserDataIO } from './hooks'
 
 export default function App() {
   const location = useLocation();
   const { enableLoadingBar, disableLoadingBar, LoadingBar } = useEventDetailsStore();
   const { getUserFromLocalStorage } = useUserAuthHook();
+  const { getEventData } = UseStartup();
+  const {getFullUserInfo} = useUserDataIO();
 
   useGoogleAuth();
 
   useEffect(() => {
-    getUserFromLocalStorage();
+    ; (async function () {
+      // console.log("Hello");
+      await getEventData();
+      await getFullUserInfo();
+      getUserFromLocalStorage();
+    })();
   }, []);
+
 
   useEffect(() => {
     if (LoadingBar) {
@@ -28,6 +36,7 @@ export default function App() {
       document.body.style.overflow = 'auto';
     };
   }, [LoadingBar]);
+  
 
   return (
     <div>

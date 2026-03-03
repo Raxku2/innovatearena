@@ -23,7 +23,7 @@ const useUserAuthHook = () => {
             const data = datainstorage ? await JSON.parse(datainstorage) : null;
             if (data) {
 
-                console.log(data);
+                // console.log(data);
                 setLogin(data.name, data.email, data.dp, data._id, data.type, data.team_id);
                 setUserDepartment(data.dept);
                 setUserReg(data.reg_status);
