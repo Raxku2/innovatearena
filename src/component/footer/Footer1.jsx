@@ -16,8 +16,13 @@ export default function Footer1() {
                     <a className="text-slate-400 hover:text-(--neon-cyan) hover:scale-125 transition-all" href="#"><span className="material-symbols-outlined">mail</span></a>
                     <a className="text-slate-400 hover:text-(--neon-pink) hover:scale-125 transition-all" href="#"><span className="material-symbols-outlined">public</span></a>
                     <a className="text-slate-400 hover:text-(--neon-yellow) hover:scale-125 transition-all" href="#"><span className="material-symbols-outlined">alternate_email</span></a>    
-                    <a className="hover:text-neon-cyan transition-colors" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
-                    <a className="hover:text-neon-pink transition-colors" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>
+                    <div className='flex-col flex items-center justify-center'>
+
+                    <a className="hover:text-neon-cyan transition-colors text-slate-400" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
+                    <a className="hover:text-neon-pink transition-colors text-slate-400" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>
+                    <a className="hover:text-neon-yellow transition-colors text-slate-400" href="https://innovatearena.vercel.app/refund_policy">REFUND_PROTOCOL</a>
+                    
+                    </div>
                 </div>
                 <div className="text-slate-600 text-xs font-mono">
                     © 2026 Pinaka. <span className="text-(--neon-green)">ALL SYSTEMS OPERATIONAL.</span>

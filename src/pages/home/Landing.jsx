@@ -36,8 +36,10 @@ export default function Landing() {
 
     return (
         <div className="font-body text-slate-200 antialiased overflow-x-hidden selection:bg-(--neon-pink) selection:text-white">
+            
             <div className="fixed inset-0 z-100 crt-overlay pointer-events-none"></div>
             <div className="fixed inset-0 z-0 pointer-events-none scanline"></div>
+
             <div className="fixed right-0 top-1/4 z-40 hidden xl:flex flex-col gap-2 p-2 pointer-events-none">
                 <div className="glass-terminal p-4 w-48 rounded-l-lg border-r-0 transform translate-x-2 hover:translate-x-0 transition-transform duration-300 pointer-events-auto">
                     <h4 className="text-(--neon-cyan) font-mono text-xs mb-2 border-b border-(--neon-cyan)/30 pb-1">SYS_STATUS</h4>
