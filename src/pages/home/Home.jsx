@@ -540,14 +540,7 @@ export default function Home() {
                         </div>
                       </div>
 
-                      <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
 
-                      >
-                        <span className="relative z-10 flex items-center justify-center gap-2">
-                          COMING_SOON
-                        </span>
-                        <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                      </button>
                       {/* <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
                         onClick={() => {
                           enableLoadingBar();
