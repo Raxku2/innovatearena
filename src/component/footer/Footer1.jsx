@@ -2,8 +2,9 @@ import React from 'react'
 
 export default function Footer1() {
     return (
-        <footer className="border-t border-(--neon-cyan)/20 bg-black py-12 px-6 relative overflow-hidden">
+        <footer className="border-t border-(--neon-cyan)/20 bg-black py-12 px-6 relative overflow-hidden z-10">
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwgMjQzLCAyNTUsIDAuMSkiLz48L3N2Zz4=')] opacity-20"></div>
+
             <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 relative z-10">
                 <div className="flex items-center gap-4 text-white">
                     <span className="material-symbols-outlined text-(--neon-cyan) text-[32px] animate-pulse">terminal</span>
@@ -13,10 +14,14 @@ export default function Footer1() {
                     </div>
                 </div>
                 <div className="flex gap-8">
-                    <a className="text-slate-400 hover:text-(--neon-cyan) hover:scale-125 transition-all" href="#"><span className="material-symbols-outlined">mail</span></a>
-                    <a className="text-slate-400 hover:text-(--neon-pink) hover:scale-125 transition-all" href="#"><span className="material-symbols-outlined">public</span></a>
-                    <a className="text-slate-400 hover:text-(--neon-yellow) hover:scale-125 transition-all" href="#"><span className="material-symbols-outlined">alternate_email</span></a>
-                    <div className='flex-col flex items-center justify-center'>
+                    <div className='flex-col flex md:flex-row items-center justify-center text-xs'>
+
+                        <a className="text-slate-400 hover:text-(--neon-cyan) hover:scale-125 transition-all m-2" href='mailto:yantrayodha@gmail.com'><span className="material-symbols-outlined">mail</span></a>
+                        <a className="text-slate-400 hover:text-(--neon-pink) hover:scale-125 transition-all m-2" href="https://yyaiem.github.io/yy"><span className="material-symbols-outlined">public</span></a>
+                        {/* <a className="text-slate-400 hover:text-(--neon-yellow) hover:scale-125 transition-all" href="#"><span className="material-symbols-outlined">alternate_email</span></a> */}
+
+                    </div>
+                    <div className='flex-col flex items-center justify-center text-xs'>
 
                         <a className="hover:text-neon-cyan transition-colors text-slate-400" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
                         <a className="hover:text-neon-pink transition-colors text-slate-400" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>

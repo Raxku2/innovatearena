@@ -5,7 +5,7 @@ const useDepartmentSelector = () => {
   const { department, setUserDepartment } = useUserDetailsStore();
 
   // 2. The strict array of allowed engineering departments
-  const validDepartments = ['ECE', 'EE', 'ME', 'CSE', 'ETC'];
+  const validDepartments = ['ECE', 'CSE', 'EE', 'ME', 'BSHU'];
 
   // 3. Safe setter function that updates the GLOBAL store
   const handleSetDepartment = (selectedValue) => {
@@ -17,11 +17,11 @@ const useDepartmentSelector = () => {
     }
   };
 
-  return { 
+  return {
     // Return the value from Zustand so the UI stays in sync
-    currentdepartment: department, 
-    setDepartment: handleSetDepartment, 
-    validDepartments 
+    currentdepartment: department,
+    setDepartment: handleSetDepartment,
+    validDepartments
   };
 };
 

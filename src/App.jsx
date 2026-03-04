@@ -5,22 +5,25 @@ import { Footer1, Navbar1 } from './component'
 import { AnimatePresence } from 'motion/react'
 import { Link, Route, Routes, useLocation } from "react-router"
 import { useEventDetailsStore } from './stores'
-import { useGoogleAuth, UseStartup, useUserAuthHook, useUserDataIO } from './hooks'
+import { useAdminControls, useGoogleAuth, UseStartup, useUserAuthHook, useUserDataIO } from './hooks'
 
 export default function App() {
   const location = useLocation();
   const { enableLoadingBar, disableLoadingBar, LoadingBar } = useEventDetailsStore();
   const { getUserFromLocalStorage } = useUserAuthHook();
   const { getEventData } = UseStartup();
-  const {getFullUserInfo} = useUserDataIO();
+  const { getFullUserInfo } = useUserDataIO();
+  const { giveRecods } = useAdminControls();
 
   useGoogleAuth();
 
   useEffect(() => {
     ; (async function () {
-      // console.log("Hello");
+      // getUserFromLocalStorage();
       await getEventData();
       await getFullUserInfo();
+      await giveRecods();
+      // console.log("Hello");
       getUserFromLocalStorage();
     })();
   }, []);
@@ -36,7 +39,7 @@ export default function App() {
       document.body.style.overflow = 'auto';
     };
   }, [LoadingBar]);
-  
+
 
   return (
     <div>
@@ -73,6 +76,7 @@ export default function App() {
         </Routes>
 
       </AnimatePresence>
+
       <Footer1 />
 
     </div>

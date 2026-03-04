@@ -8,7 +8,7 @@ const UseStartup = () => {
 
     const getEventData = async () => {
         try {
-            const res = await fetch(BACKEND_API + `/event`);
+            const res = await fetch(BACKEND_API + `/event/`);
 
             if (res.status == 200) {
                 const data = await res.json();
