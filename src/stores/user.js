@@ -52,6 +52,7 @@ const useUserDetailsStore = create((set) => ({
     setPartnerStatus: (param) => set({ partner_status: param }),
     setPayStatus: (param) => set({ peymentStatus: param }),
     settxn: (param) => set({ txnId: param }),
+    setuserType: (param) => set({ userType: param }),
 
 }))
 

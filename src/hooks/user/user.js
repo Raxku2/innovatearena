@@ -1,4 +1,6 @@
+import { data } from "react-router";
 import { useEventDetailsStore, useUserDetailsStore } from "../../stores";
+import { useAdminControls } from "../admin/admin";
 import { useUserAuthHook } from "../auth/userAuth";
 import useDepartmentSelector from "../inputs/deptselector";
 import useYearSelector from "../inputs/yearselector";
@@ -6,13 +8,15 @@ import { UseStartup } from "../startup/UseStartup";
 
 const useUserDataIO = () => {
     const { setAppStatus } = useEventDetailsStore();
+    const { giveRecods } = useAdminControls();
+
     const {
         userId, userName, department, batch,
         phone, setUserPhone, partnerName, partneremail,
         setUserDepartment, setUserBatch, setPartnerStatus,
         setUserPaernerName, setUserPaernerdp, setUserPaernerId,
         setUserPaernerEmail, setUserReg, setLogin, email,
-        setPayStatus, settxn, userType
+        setPayStatus, settxn, userType, setuserType
 
     } = useUserDetailsStore();
 
@@ -22,7 +26,7 @@ const useUserDataIO = () => {
     const { disableLoadingBar, enableLoadingBar } = useEventDetailsStore();
 
 
-    const { setUserToLocalStorage } = useUserAuthHook();
+    const { setUserToLocalStorage, getUserFromLocalStorage } = useUserAuthHook();
     const { getEventData } = UseStartup();
 
 
@@ -43,16 +47,21 @@ const useUserDataIO = () => {
                 fetch(data.dp);
 
                 setLogin(data.name, data.email, data.dp, data._id, data.type, data.team_id);
-                setUserBatch(data.batch);
-                setPayStatus(data.payment_status);
-                setUserDepartment(data.dept);
-                setUserPhone(data.phone);
-                setUserReg(data.reg_status);
+                data.batch && setUserBatch(data.batch ? data.batch : "");
+                data.payment_status && setPayStatus(data.payment_status);
+                setUserDepartment(data.dept ? data.dept : '');
+                data.phone ?? setUserPhone(data.phone);
+                data.reg_status ?? setUserReg(data.reg_status);
                 setPartnerStatus(data.partnerId ? true : false);
-                setUserPaernerEmail(data.partnerEmail);
-                setUserPaernerId(data.partnerId);
-                setUserPaernerName(data.partnerName);
-                settxn(data.txn);
+                data.partnerEmail ?? setUserPaernerEmail(data.partnerEmail);
+                data.partnerId ?? setUserPaernerId(data.partnerId);
+                data.partnerName ?? setUserPaernerName(data.partnerName);
+                data.txn ?? settxn(data.txn);
+                data.type ?? setuserType(data.type)
+                // console.log("i set data");
+
+
+                await giveRecods();
 
                 setUserToLocalStorage(data)
             }
@@ -121,6 +130,9 @@ const useUserDataIO = () => {
             disableLoadingBar();
             return
         }
+        let partneremail_formatted = String(partneremail).toLowerCase()
+        // console.log(partneremail_formatted);
+        
         setAppStatus("updating...")
         try {
             const res = await fetch(BACKEND_API + `/user/partner/${userId}`, {
@@ -131,7 +143,7 @@ const useUserDataIO = () => {
                 body: JSON.stringify(
                     {
                         "name": partnerName,
-                        "email": partneremail
+                        "email": partneremail_formatted
                     })
             });
 
@@ -139,6 +151,7 @@ const useUserDataIO = () => {
                 setAppStatus("Partner pached");
                 setPartnerStatus(true);
                 getPartnerInfo();
+                // getUserFromLocalStorage()
 
 
             } else if (res.status == 501) {
@@ -218,8 +231,9 @@ const useUserDataIO = () => {
 
             if (res.status == 200) {
                 // setPartnerStatus(true);
-                getPartnerInfo()
-                getFullUserInfo();
+                await getPartnerInfo()
+                await getFullUserInfo();
+                getUserFromLocalStorage();
                 // disableLoadingBar()
                 setAppStatus("Partner scanned");
 
@@ -261,13 +275,20 @@ const useUserDataIO = () => {
 
             if (res.status == 204) {
                 setPartnerStatus(false);
-                setUserPaernerEmail(null);
-                setUserPaernerName(null);
-                setUserPaernerId(null);
+                setUserPaernerEmail('');
+                setUserPaernerName('');
+                setUserPaernerId('');
                 // setPartnerStatus(true);
-                getPartnerInfo();
-                // getFullUserInfo();
-                // disableLoadingBar()
+                // getPartnerInfo();
+                // getUserFromLocalStorage();
+                let data = await JSON.parse(localStorage.getItem("userData"));
+                data.partnerEmail = ''
+                data.partnerName = ''
+                data.partnerId = ''
+                localStorage.setItem('userData', JSON.stringify(data))
+                getFullUserInfo();
+
+                disableLoadingBar();
                 setAppStatus("Partner killed");
 
 

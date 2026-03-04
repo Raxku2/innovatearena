@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Landing from './Landing'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores'
-import { DateCounter, Navbar1, RuleCard, ScheduleCard } from '../../component';
+import { DateCounter, DepartmentMatrix, Navbar1, Radar, RuleCard, ScheduleCard } from '../../component';
 import clsx from 'clsx';
-import { useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
+import { useAdminControls, useDepartmentSelector, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
 import { useNavigate } from 'react-router'
+import { motion, AnimatePresence } from 'motion/react'
+import CommandCenter from '../../component/cards/CommandCenter';
 
 export default function Home() {
 
@@ -15,14 +17,16 @@ export default function Home() {
     partneremail, team_id, setUserName,
     partner_status, setUserPhone,
     setUserPaernerName, setUserPaernerEmail,
-    txnId, userType
+    txnId, userType,
+    setPartnerStatus,
+    setUserPaernerId,
   } = useUserDetailsStore();
 
 
   const navigate = useNavigate();
 
   const {
-    enableLoadingBar, AppStatus, rules, schedules
+    enableLoadingBar, AppStatus, rules, schedules, matrix
   } = useEventDetailsStore();
 
   const [regCardStatus, setRegCardStatus] = useState(0);
@@ -35,6 +39,8 @@ export default function Home() {
   const {
     currentdepartment, setDepartment, validDepartments
   } = useDepartmentSelector();
+  const { giveRecods } = useAdminControls();
+
 
 
 
@@ -62,8 +68,15 @@ export default function Home() {
 
   useEffect(() => {
     getFullUserInfo();
+    // console.log(userType);
+
   }, [userId])
 
+
+  // useEffect(() => {
+    // console.log(matrix);
+
+  // }, [matrix])
 
   useEffect(() => {
     if (!registrationStatus && !peymentStatus) {
@@ -96,7 +109,8 @@ export default function Home() {
       setRegCardMessage("[!] REGISTRATION_PENDING")
     }
 
-  }, [registrationStatus, peymentStatus])
+  }, [registrationStatus, peymentStatus]);
+
 
 
   // const { startRegistrationPayment } = useInnovateArenaPayment();
@@ -108,6 +122,31 @@ export default function Home() {
   const [newRuleTitle, setNewRuleTitle] = useState('');
 
 
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [pagewidth, setWidth] = useState('');
+
+  useEffect(() => {
+    function handleResize() {
+      // console.log("Current width:", window.innerWidth);
+      // console.log("Current height:", window.innerHeight); 
+      setWidth(window.innerWidth)
+    }
+
+    // Run once on mount (optional)
+    handleResize();
+
+    // Add listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => {
+      // window.addEventListener("resize", setWidth(window.innerWidth));
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+
   return (
     <>
       {!userType && <div>
@@ -116,29 +155,53 @@ export default function Home() {
       </div>
       }
 
-      {userType === 'user' && (
+      {userType && (
         <div>
           <div className="font-body text-slate-300 antialiased overflow-hidden selection:bg-(--neon-pink) selection:text-white h-screen flex flex-col">
             <div className="fixed inset-0 z-100 crt-overlay pointer-events-none"></div>
             <div className="flex h-full w-full relative z-10">
 
-              <aside className="w-full md:w-64 h-full hidden md:flex flex-col bg-black/80 border-r border-slate-800 relative z-20">
-                <div className="h-20 flex items-center px-6 border-b border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-(--neon-cyan) text-3xl animate-pulse">terminal</span>
-                    <div className="flex flex-col">
-                      <span className="font-display font-bold text-white tracking-wider text-sm">INNOVATE<span className="text-(--neon-cyan)">ARENA</span></span>
-                      <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V2.6</span>
-                    </div>
-                  </div>
-                </div>
-                <nav className="flex-1 py-8 space-y-2 px-2 font-mono text-sm">
-                  <a className="sidebar-link active flex items-center gap-4 px-4 py-3 text-white rounded-r-lg" href="#">
-                    <span className="material-symbols-outlined text-lg">person</span>
-                    <span>PROFILE</span>
-                    <span className="ml-auto w-1 h-1 bg-(--neon-pink) rounded-full shadow-[0_0_5px_#ff0055]"></span>
-                  </a>
-                  {/* 
+
+              <AnimatePresence>
+
+                {(isOpen || pagewidth >= 1280) && (
+                  <>
+                    {/* Overlay (mobile only) */}
+                    {isOpen && (
+                      <motion.div
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-300 xl:hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsOpen(false)}
+                      />
+                    )}
+
+                    <motion.aside
+                      initial={{ x: -300 }}
+                      animate={{
+                        x: isOpen || pagewidth >= 1280 ? 0 : -300
+                      }}
+                      exit={{ x: -300 }}
+                      transition={{ type: "spring", stiffness: 260, damping: 25 }}
+                      className="fixed xl:relative w-64 h-full bg-black/90 border-r border-slate-800 z-400 flex flex-col"
+                    >
+                      <div className="h-20 flex items-center px-6 border-b border-slate-800">
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-(--neon-cyan) text-3xl animate-pulse">terminal</span>
+                          <div className="flex flex-col">
+                            <span className="font-display font-bold text-white tracking-wider text-sm">INNOVATE<span className="text-(--neon-cyan)">ARENA</span></span>
+                            <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V2.6</span>
+                          </div>
+                        </div>
+                      </div>
+                      <nav className="flex-1 py-8 space-y-2 px-2 font-mono text-sm">
+                        <a className="sidebar-link active flex items-center gap-4 px-4 py-3 text-white rounded-r-lg" href="#">
+                          <span className="material-symbols-outlined text-lg">person</span>
+                          <span>PROFILE</span>
+                          <span className="ml-auto w-1 h-1 bg-(--neon-pink) rounded-full shadow-[0_0_5px_#ff0055]"></span>
+                        </a>
+                        {/* 
                   <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
                     <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">calendar_month</span>
                     <span>SCHEDULE</span>
@@ -162,28 +225,31 @@ export default function Home() {
                   <span>QUERIES</span>
                 </a>
                     */}
-                </nav>
+                      </nav>
 
-                <div className="p-4 border-t border-slate-800">
-                  <button className="bg-slate-900/50 rounded border border-slate-700 p-3 flex items-center gap-3 group cursor-pointer hover:border-neon-cyan transition-colors"
-                    onClick={() => {
-                      enableLoadingBar();
-                      removeUser();
-                      navigate('/');
-                      window.location.reload();
-                    }}
-                  >
-                    <div className="w-8 h-8 rounded bg-neon-cyan/20 flex items-center justify-center text-neon-cyan">
-                      <span className="material-symbols-outlined text-sm">logout</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-xs font-bold text-white group-hover:text-neon-cyan">TERMINATE</span>
-                      <span className="text-[10px] text-slate-500 font-mono text-wrap">TEAM ID: #{team_id}</span>
-                    </div>
-                  </button>
-                </div>
+                      <div className="p-4 border-t border-slate-800">
+                        <button className="bg-slate-900/50 rounded border border-slate-700 p-3 flex items-center gap-3 group cursor-pointer hover:border-neon-cyan transition-colors"
+                          onClick={() => {
+                            enableLoadingBar();
+                            removeUser();
+                            navigate('/');
+                            window.location.reload();
+                          }}
+                        >
+                          <div className="w-8 h-8 rounded bg-neon-cyan/20 flex items-center justify-center text-neon-cyan">
+                            <span className="material-symbols-outlined text-sm">logout</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-bold text-white group-hover:text-neon-cyan">TERMINATE</span>
+                            <span className="text-[10px] text-slate-500 font-mono text-wrap">TEAM ID: #{team_id}</span>
+                          </div>
+                        </button>
+                      </div>
 
-              </aside>
+                    </motion.aside>
+                  </>)}
+
+              </AnimatePresence>
 
               <main className="flex-1 flex flex-col h-full overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-125 h-125 bg-(--neon-cyan)/5 rounded-full blur-[120px] pointer-events-none"></div>
@@ -191,7 +257,10 @@ export default function Home() {
 
 
 
-                <header className="h-20 flex items-center justify-between px-8 border-b border-slate-800/50 bg-black/20 backdrop-blur-md z-30">
+                <header className="h-20 flex items-center justify-between px-8 border-b border-slate-800/50 bg-black/20 backdrop-blur-md z-30"
+
+                  onClick={() => setIsOpen(true)}
+                >
                   <div className="flex flex-col">
                     <h1 className="text-white font-display font-bold  text-xs md:text-sm  tracking-wide flex items-center gap-2">
                       <span className="text-(--neon-green) text-xs md:text-lg font-mono capitalize">[ STATUS: {AppStatus.toUpperCase()} ]</span>
@@ -231,11 +300,12 @@ export default function Home() {
                     <div className={clsx("col-span-1 md:col-span-8 glass-panel rounded-xl p-6 relative overflow-hidden group", regCardStatus == 0 ? " neon-border-yellow " : " neon-border-cyan ")}>
                       <div className="scan-line-anim opacity-20"></div>
 
-                      <div className="flex justify-between items-start mb-6 relative z-10">
+                      <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
                         <div>
-                          <h3 className={clsx("font-display font-bold text-lg tracking-wider mb-1", regCardStatus == 0 ? "text-(--neon-yellow) " : "text-(--neon-green) ")} >REGISTRATION_PROTOCOL</h3>
+                          <h3 className={clsx("font-display font-bold text-lg text-wrap tracking-wider mb-1", regCardStatus == 0 ? "text-(--neon-yellow) " : "text-(--neon-green) ")} >REGISTRATION_PROTOCOL</h3>
                           <p className="text-xs font-mono text-slate-400">Unique ID: <span className="text-white">{email}</span></p>
                         </div>
+
                         <div className={clsx("px-3 py-1  border text-xs font-mono font-bold rounded animate-pulse", regCardStatus == 0 ? "bg-(--neon-yellow)/10 border-neon-yellow/30 text-(--neon-yellow) " : "bg-(--neon-green)/10 border-neon-cyan/30 text-(--neon-green) ")}>
                           {regCardMessage}
                         </div>
@@ -297,13 +367,13 @@ export default function Home() {
                           <select
                             value={currentdepartment}
                             onChange={(e) => setDepartment(e.target.value)}
-                            className={`
-            w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none
-             ${currentdepartment === ''
+                            className={`w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none 
+                              ${currentdepartment === ''
                                 ? 'text-slate-500'
                                 : 'text-white'
                               }
-          `} disabled={!userFormedit}
+                              `}
+                            disabled={!userFormedit}
                           >
                             {/* Placeholder Option */}
                             <option value="" disabled className="bg-transparent text-slate-500">
@@ -328,14 +398,14 @@ export default function Home() {
                           <select
                             value={year}
                             onChange={(e) => setYear(e.target.value)}
-                            className={`
-            w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none
-            ${year === ''
+                            className={`w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none
+                              ${year === ''
                                 ? 'text-slate-500'
                                 : 'text-white'
-                              }
-          `} disabled={!userFormedit}
+                              }`}
+                            disabled={!userFormedit}
                           >
+
                             {/* Placeholder Option */}
                             <option value="" disabled className="bg-transparent  text-slate-500">
                               [ SELECT_YEAR ]
@@ -474,6 +544,12 @@ export default function Home() {
                           onClick={() => {
                             enableLoadingBar();
                             removePartnerInfo();
+
+                            setPartnerStatus(false);
+                            setUserPaernerEmail('');
+                            setUserPaernerName('');
+                            setUserPaernerId('');
+                            setparnrtCardVisibility(false);
                           }}
                         >
                           <span className="material-symbols-outlined text-sm">delete</span>
@@ -731,25 +807,94 @@ export default function Home() {
 
                           </div>
                         </div>
-                        <p className="text-[10px] text-slate-600 font-mono mt-4">HOVER_TO_ACTIVATE_EDIT_MODE</p>
                       </div>
                     </div>
+                  </div>
+
+                  {/* \admin */}
 
 
+                  <div className="max-w-7xl mx-auto space-y-6 pt-6" hidden={!(userType === 'root')}>
 
-                    {/* footer sec */}
-                    <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
-                      <span>SYSTEM_ID: <span className="text-slate-400">NODE_001_ALPHA</span></span>
-                      <div className="flex gap-4">
-                        <a className="hover:text-neon-cyan transition-colors" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
-                        <a className="hover:text-neon-pink transition-colors" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>
-                        <a className="hover:text-neon-yellow transition-colors" href="#">SUPPORT_CHANNEL</a>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+
+                      <div className="glass-panel neon-border-cyan rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-cyan font-mono text-xs uppercase tracking-wider">Total Users</span>
+                          <span className="material-symbols-outlined text-neon-cyan/50">group</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]">{matrix ? (matrix.users_email).length : 0}</div>
+                        <div className="mt-2 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-neon-cyan w-[65%] animate-pulse"></div>
+                        </div>
+                      </div>
+
+
+                      <div className="glass-panel neon-border-green rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-green font-mono text-xs uppercase tracking-wider">Participants</span>
+                          <span className="px-1.5 py-0.5 bg-neon-green/20 text-neon-green text-[10px] font-bold rounded border border-neon-green/30">VERIFIED</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(0,255,157,0.5)]">{matrix ? (matrix.team_count) : 0}</div>
+                        <div className="mt-2 text-xs font-mono text-slate-400">
+                          {/* <span className="text-neon-green">+12%</span> vs last hour */}
+                        </div>
+                      </div>
+
+
+                      <div className="glass-panel neon-border-yellow rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-yellow font-mono text-xs uppercase tracking-wider">Revenue</span>
+                          <span className="material-symbols-outlined text-neon-yellow/50">payments</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(255,238,0,0.5)]">₹--,--</div>
+                        <div className="mt-2 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-neon-yellow w-[0%]"></div>
+                        </div>
+                      </div>
+
+
+                      <div className="glass-panel neon-border-pink rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-pink font-mono text-xs uppercase tracking-wider">Sys_Latency</span>
+                          <span className="material-symbols-outlined text-neon-pink/50 animate-spin-slow">settings_ethernet</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(255,0,85,0.5)]">12ms</div>
+                        <div className="mt-2 text-xs font-mono text-neon-cyan">OPTIMAL_PERFORMANCE</div>
+                      </div>
+
+
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                      <DepartmentMatrix />
+                      <div className="col-span-1 lg:col-span-4 space-y-6">
+                        <Radar />
+                        <CommandCenter />
                       </div>
                     </div>
 
 
                   </div>
+
+                  {/* footer sec */}
+                  <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
+                    <span>SYSTEM_ID: <span className="text-slate-400">NODE_001_ALPHA</span></span>
+                    <div className="flex gap-4">
+                      <a className="hover:text-neon-cyan transition-colors" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
+                      <a className="hover:text-neon-pink transition-colors" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>
+                      <a className="hover:text-neon-yellow transition-colors" href="#">SUPPORT_CHANNEL</a>
+                    </div>
+                  </div>
                 </div>
+
+
+
               </main>
             </div>
 

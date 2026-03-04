@@ -1,14 +1,15 @@
 import useGoogleAuth from "./auth/googleAuth"
-import { useUserAuthHook } from "./auth/userAuth"
 import useDepartmentSelector from "./inputs/deptselector"
 import useYearSelector from "./inputs/yearselector"
-import { UseStartup } from "./startup/UseStartup"
 import useInnovateArenaPayment from "./user/payment"
+import { useAdminControls } from "./admin/admin"
+import { useUserAuthHook } from "./auth/userAuth"
+import { UseStartup } from "./startup/UseStartup"
 import { useUserDataIO } from "./user/user"
 
 
-
-export{
+export {
+    useAdminControls,
     UseStartup,
     useInnovateArenaPayment,
     useUserDataIO,

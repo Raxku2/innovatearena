@@ -14,7 +14,7 @@ const useEventDetailsStore = create((set) => ({
   eventDate: 'APRIL 08',
   eventOrganizers: [],
   rules: [],
-  schedules: [],
+  matrix: null,
 
 
 
@@ -24,6 +24,7 @@ const useEventDetailsStore = create((set) => ({
   setEventOrga: (params) => set({ eventOrganizers: params }),
   setEventRules: (params) => set({ rules: params }),
   setEventSchedules: (params) => set({ schedules: params }),
+  setMatrix: (params) => set({ matrix: params }),
 
 }))
 
