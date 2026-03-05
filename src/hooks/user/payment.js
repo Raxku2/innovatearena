@@ -4,6 +4,7 @@ import { useUserDataIO } from "./user";
 
 const useInnovateArenaPayment = () => {
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
+    const REDION = import.meta.env.VITE_REDION;
     const RAZOR_KEY = import.meta.env.VITE_RAZOR_KEY;
 
     const { disableLoadingBar, setAppStatus } = useEventDetailsStore();
@@ -128,7 +129,41 @@ const useInnovateArenaPayment = () => {
 
     }, [BACKEND_API, RAZOR_KEY, userId, userName, email, phone, team_id]);
 
-    return { startRegistrationPayment };
+    const goForPayment = async () => {
+        if (!userId) {
+            console.log("no user id");
+            return
+        }
+        try {
+
+            const orderToken = await fetch(`${BACKEND_API}/pay/token/${userId}`,  // ❗ removed extra space
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            console.log(orderToken.status);
+            if (orderToken.status == 201) {
+                const order = await orderToken.json();
+                // console.log(order);
+                window.location.href = REDION+'/panoroma/'+order
+                // console.log(REDION);
+                
+                // disableLoadingBar();
+
+            }
+        } catch (error) {
+            console.log(error);
+
+        }
+    }
+
+
+
+    return { startRegistrationPayment, goForPayment };
 };
 
 export default useInnovateArenaPayment;

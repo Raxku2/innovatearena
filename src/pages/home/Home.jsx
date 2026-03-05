@@ -3,13 +3,13 @@ import Landing from './Landing'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores'
 import { DateCounter, DepartmentMatrix, Navbar1, Radar, RuleCard, ScheduleCard } from '../../component';
 import clsx from 'clsx';
-import { useAdminControls, useDepartmentSelector, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
+import { useAdminControls, useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
 import { useNavigate } from 'react-router'
 import { motion, AnimatePresence } from 'motion/react'
 import CommandCenter from '../../component/cards/CommandCenter';
 
 export default function Home() {
-
+  const { goForPayment } = useInnovateArenaPayment();
   const {
     dp, userName, email, userId,
     peymentStatus, registrationStatus,
@@ -42,7 +42,7 @@ export default function Home() {
   const { giveRecods } = useAdminControls();
 
 
-
+// console.log(import.meta.env);
 
 
   const [userFormedit, setUserFormedit] = useState(false);
@@ -74,7 +74,7 @@ export default function Home() {
 
 
   // useEffect(() => {
-    // console.log(matrix);
+  // console.log(matrix);
 
   // }, [matrix])
 
@@ -624,10 +624,11 @@ export default function Home() {
                       </div>
 
 
-                      {/* <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
+                      <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
                         onClick={() => {
                           enableLoadingBar();
-                          startRegistrationPayment();
+                          // startRegistrationPayment();
+                          goForPayment()
                         }}
                         hidden={peymentStatus}
                       >
@@ -635,7 +636,7 @@ export default function Home() {
                           CLICK_TO_PAY <span className="material-symbols-outlined text-sm">arrow_forward</span>
                         </span>
                         <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                      </button> */}
+                      </button>
 
 
                       <button className="w-full relative overflow-hidden group py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold uppercase tracking-wider transition-all backdrop-blur-sm"
