@@ -584,7 +584,8 @@ export default function Home() {
                           <span className="material-symbols-outlined text-slate-500 group-hover:text-white">add</span>
                         </div>
                         <h4 className="text-white font-bold text-sm">NO_SQUAD_DETECTED</h4>
-                        <p className="text-slate-500 text-xs font-mono mt-1 mb-4">Join a cluster or initiate a new protocol.</p>
+                        <p className="text-slate-500 text-xs font-mono mt-1 mb-4"
+                          hidden={peymentStatus}>Join a cluster or initiate a new protocol.</p>
 
                         <div className=" " >
                           <button className="py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border w-full border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all"
