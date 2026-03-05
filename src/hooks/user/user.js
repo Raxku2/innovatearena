@@ -5,6 +5,7 @@ import { useUserAuthHook } from "../auth/userAuth";
 import useDepartmentSelector from "../inputs/deptselector";
 import useYearSelector from "../inputs/yearselector";
 import { UseStartup } from "../startup/UseStartup";
+import { useEffect } from "react";
 
 const useUserDataIO = () => {
     const { setAppStatus } = useEventDetailsStore();
@@ -29,37 +30,71 @@ const useUserDataIO = () => {
     const { setUserToLocalStorage, getUserFromLocalStorage } = useUserAuthHook();
     const { getEventData } = UseStartup();
 
+    useEffect(() => {
+        if (userType === "root") {
+            giveRecods();
+        }
+    }, [userType]);
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
 
     const getFullUserInfo = async () => {
+
         if (!userId) {
             return
         }
-        // setAppStatus("sync...")
+
         try {
+
             const res = await fetch(BACKEND_API + `/user/${userId}`);
 
             if (res.status == 200) {
 
-
                 const data = await res.json();
+
                 fetch(data.dp);
 
                 setLogin(data.name, data.email, data.dp, data._id, data.type, data.team_id);
-                data.batch && setUserBatch(data.batch ? data.batch : "");
-                data.payment_status && setPayStatus(data.payment_status);
-                setUserDepartment(data.dept ? data.dept : '');
-                data.phone ?? setUserPhone(data.phone);
-                data.reg_status ?? setUserReg(data.reg_status);
-                setPartnerStatus(data.partnerId ? true : false);
-                data.partnerEmail ?? setUserPaernerEmail(data.partnerEmail);
-                data.partnerId ?? setUserPaernerId(data.partnerId);
-                data.partnerName ?? setUserPaernerName(data.partnerName);
-                data.txn ?? settxn(data.txn);
-                data.type ?? setuserType(data.type)
-                // console.log("i set data");
 
+                if (data.batch !== undefined && data.batch !== null) {
+                    setUserBatch(data.batch ? data.batch : "");
+                }
+
+                if (data.payment_status !== undefined && data.payment_status !== null) {
+                    setPayStatus(data.payment_status);
+                }
+
+                setUserDepartment(data.dept ? data.dept : '');
+
+                if (data.phone !== undefined && data.phone !== null) {
+                    setUserPhone(data.phone);
+                }
+
+                if (data.reg_status !== undefined && data.reg_status !== null) {
+                    setUserReg(data.reg_status);
+                }
+
+                setPartnerStatus(data.partnerId ? true : false);
+
+                if (data.partnerEmail !== undefined && data.partnerEmail !== null) {
+                    setUserPaernerEmail(data.partnerEmail);
+                }
+
+                if (data.partnerId !== undefined && data.partnerId !== null) {
+                    setUserPaernerId(data.partnerId);
+                }
+
+                if (data.partnerName !== undefined && data.partnerName !== null) {
+                    setUserPaernerName(data.partnerName);
+                }
+
+                if (data.txn !== undefined && data.txn !== null) {
+                    settxn(data.txn);
+                }
+
+                if (data.type !== undefined && data.type !== null) {
+                    setuserType(data.type);
+                }
 
                 await giveRecods();
 
@@ -72,52 +107,64 @@ const useUserDataIO = () => {
                 window.location.reload();
             }
 
-            // setAppStatus("data updated")
-
         } catch (error) {
             console.error("Profile fetch failed:", error);
         }
     }
 
+
+
     const updateUserInfo = async () => {
+
         if (!userId) {
             return
         }
+
         setAppStatus("updating...")
+
         try {
-            const res = await fetch(BACKEND_API + `/user/${userId}`, {
+
+            const payload = {
+                "name": userName ?? null,
+                "dept": currentdepartment ?? null,
+                "batch": year ?? null,
+                "phone": phone ?? null,
+                "reg_status": userName && currentdepartment && year && phone ? true : false
+            }
+
+            const res = await fetch(`${BACKEND_API}/user/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ // 3. Stringify your data object
-                    "name": userName ?? null,
-                    "dept": currentdepartment ?? null,
-                    "batch": year ?? null,
-                    "phone": phone ?? null,
-                    "reg_status": userName && currentdepartment && year && phone ? true : false
-                })
-            });
+                body: JSON.stringify(payload)
+            })
 
-            if (res.status == 200) {
-                setAppStatus("input recorded")
-                getFullUserInfo();
+            const status = res.status
 
-            } else if (res.status == 304) {
-                setAppStatus("data matched")
-                getFullUserInfo();
+            if (status === 200 || status === 304) {
 
-            } else {
-                console.log(res.status);
+                if (status === 200) {
+                    setAppStatus("input recorded")
+                }
 
-                setAppStatus("try again")
+                if (status === 304) {
+                    setAppStatus("data matched")
+                }
 
+                await getFullUserInfo()
+                return
             }
-        } catch (error) {
-            setAppStatus("try again")
-            console.error("Profile fetch failed:", error);
-        }
 
+            console.log(status)
+            setAppStatus("try again")
+
+        } catch (error) {
+
+            console.error("Profile fetch failed:", error)
+            setAppStatus("try again")
+
+        }
     }
 
     const createPartner = async () => {
@@ -132,7 +179,7 @@ const useUserDataIO = () => {
         }
         let partneremail_formatted = String(partneremail).toLowerCase()
         // console.log(partneremail_formatted);
-        
+
         setAppStatus("updating...")
         try {
             const res = await fetch(BACKEND_API + `/user/partner/${userId}`, {

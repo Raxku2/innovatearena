@@ -1,42 +1,65 @@
 import { useEventDetailsStore, useUserDetailsStore } from "../../stores"
 
 const useAdminControls = () => {
-    const { setMatrix, disableLoadingBar, setAppStatus } = useEventDetailsStore();
-    const { userId, userType } = useUserDetailsStore();
+
+    const setMatrix = useEventDetailsStore(s => s.setMatrix);
+    const disableLoadingBar = useEventDetailsStore(s => s.disableLoadingBar);
+    const setAppStatus = useEventDetailsStore(s => s.setAppStatus);
+
+    const userId = useUserDetailsStore(s => s.userId);
+    const userType = useUserDetailsStore(s => s.userType);
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
 
     const giveRecods = async () => {
-        // console.log(userType);
-        // console.log("its running");
-        if (userType != 'root') {
+
+        if (!userId) {
             return
         }
-        // console.log("its still running");
-        // console.log(userType);
-        
+
+        if (!userType || userType !== 'root') {
+            return
+        }
+
         setAppStatus("syncing...")
+
         try {
-            const res = await fetch(BACKEND_API + `/root/${userId}`);
 
-            if (res.status == 200) {
-                const data = await res.json();
-                setMatrix(data);
-                // console.log(data);
-                
+            const res = await fetch(`${BACKEND_API}/root/${userId}`)
+
+            if (res.status === 200) {
+
+                const data = await res.json()
+
+                setMatrix(data)
+
                 setAppStatus("fetched!!")
-                // disableLoadingBar();
+
+                disableLoadingBar()
+
+            }
+            else if (res.status === 401) {
+
+                setAppStatus("server denied")
+
+                disableLoadingBar()
+
+            }
+            else {
+
+                setAppStatus("fail")
+
+                disableLoadingBar()
+
             }
 
-            if (res.status == 401) {
-                setAppStatus("server denied")
-                disableLoadingBar();
-                return
-            }
-        } catch (error) {
-            // console.error("Profile fetch failed:", error);
+        }
+        catch (error) {
+
             setAppStatus("fail")
-            disableLoadingBar();
+
+            disableLoadingBar()
+
         }
 
     }
