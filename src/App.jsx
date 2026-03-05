@@ -22,7 +22,6 @@ export default function App() {
       // getUserFromLocalStorage();
       await getEventData();
       await getFullUserInfo();
-      await giveRecods();
       // console.log("Hello");
       getUserFromLocalStorage();
     })();

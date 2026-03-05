@@ -9,141 +9,159 @@ import { motion, AnimatePresence } from 'motion/react'
 import CommandCenter from '../../component/cards/CommandCenter';
 
 export default function Home() {
+  // hooks
   const { goForPayment } = useInnovateArenaPayment();
+  const navigate = useNavigate();
+  const { removeUser } = useUserAuthHook();
+  const { giveRecods } = useAdminControls();
+
+
+  // zustand stores
   const {
     dp, userName, email, userId,
     peymentStatus, registrationStatus,
-    department, batch, phone, partnerName,
-    partneremail, team_id, setUserName,
-    partner_status, setUserPhone,
-    setUserPaernerName, setUserPaernerEmail,
-    txnId, userType,
+    department, batch, phone,
+    partnerName, partneremail,
+    team_id, txnId, userType,
+    partner_status,
+
+    setUserName,
+    setUserPhone,
+    setUserPaernerName,
+    setUserPaernerEmail,
     setPartnerStatus,
     setUserPaernerId,
   } = useUserDetailsStore();
 
-
-  const navigate = useNavigate();
-
   const {
-    enableLoadingBar, AppStatus, rules, schedules, matrix
+    enableLoadingBar,
+    AppStatus,
+    rules,
+    schedules,
+    matrix
   } = useEventDetailsStore();
 
+
+  // custom hooks
+  const { year, setYear, validYears } = useYearSelector();
+  const { currentdepartment, setDepartment, validDepartments } = useDepartmentSelector();
+
+  const {
+    getFullUserInfo,
+    updateUserInfo,
+    createSchedule,
+    createPartner,
+    syncPartnerInfo,
+    removePartnerInfo,
+    createRule,
+  } = useUserDataIO();
+
+
+  // local states
   const [regCardStatus, setRegCardStatus] = useState(0);
   const [regCardMessage, setRegCardMessage] = useState("");
   const [progress, setProgress] = useState(25);
   const [step, setStep] = useState(1);
 
-
-  const { year, setYear, validYears } = useYearSelector();
-  const {
-    currentdepartment, setDepartment, validDepartments
-  } = useDepartmentSelector();
-  const { giveRecods } = useAdminControls();
-
-
-// console.log(import.meta.env);
-
-
   const [userFormedit, setUserFormedit] = useState(false);
   const [partnerFormedit, setPartnerFormedit] = useState(false);
-  const [
-    partnerCardVisibility, setparnrtCardVisibility
-  ] = useState(false);
-  const { removeUser } = useUserAuthHook();
 
-  const {
-    getFullUserInfo, updateUserInfo, createSchedule,
-    createPartner, syncPartnerInfo, removePartnerInfo,
-    createRule,
-  } = useUserDataIO();
+  const [partnerCardVisibility, setparnrtCardVisibility] = useState(false);
 
   const [modification, setModification] = useState(true);
 
-  useEffect(() => {
-    if (partnerName && partneremail) {
-      setparnrtCardVisibility(true);
-    }
-  }, [partnerName, partneremail])
 
-  useEffect(() => {
-    getFullUserInfo();
-    // console.log(userType);
-
-  }, [userId])
-
-
-  // useEffect(() => {
-  // console.log(matrix);
-
-  // }, [matrix])
-
-  useEffect(() => {
-    if (!registrationStatus && !peymentStatus) {
-      setRegCardStatus(0);
-      setRegCardMessage("[!] REGISTRATION_PENDING");
-      setProgress(25);
-      setStep(1);
-    }
-    else if (!registrationStatus && peymentStatus) {
-      setRegCardStatus(0);
-      setRegCardMessage("[!] REGISTRATION_PENDING")
-      setProgress(75);
-      setStep(2);
-    }
-    else if (registrationStatus && !peymentStatus) {
-      setRegCardStatus(0);
-      setRegCardMessage("[!] PAYMENT_PENDING")
-      setProgress(50);
-      setStep(2);
-    }
-    else if (registrationStatus && peymentStatus) {
-      setRegCardStatus(1);
-      setRegCardMessage("[✓] SEQUENCE_COMPLETE")
-      setProgress(100);
-      setStep(3);
-      setModification(false);
-    }
-    else {
-      setRegCardStatus(0);
-      setRegCardMessage("[!] REGISTRATION_PENDING")
-    }
-
-  }, [registrationStatus, peymentStatus]);
-
-
-
-  // const { startRegistrationPayment } = useInnovateArenaPayment();
-
+  // schedule creation
   const [scheduleAddPrompt, setScheduleAddPrompt] = useState(false);
   const [newScheduleTime, setNewScheduleTime] = useState('');
   const [newScheduleTitle, setNewScheduleTitle] = useState('');
+
+  // rule creation
   const [ruleAddPrompt, setRuleAddPrompt] = useState(false);
   const [newRuleTitle, setNewRuleTitle] = useState('');
 
 
-
+  // UI controls
   const [isOpen, setIsOpen] = useState(false);
   const [pagewidth, setWidth] = useState('');
 
+
+  // partner card visibility
   useEffect(() => {
-    function handleResize() {
-      // console.log("Current width:", window.innerWidth);
-      // console.log("Current height:", window.innerHeight); 
-      setWidth(window.innerWidth)
+    if (partnerName && partneremail) {
+      setparnrtCardVisibility(true);
+    }
+  }, [partnerName, partneremail]);
+
+
+  // fetch user data
+  useEffect(() => {
+    if (userId) {
+      getFullUserInfo();
+    }
+  }, [userId]);
+
+
+  // registration status logic
+  useEffect(() => {
+
+    const reg = registrationStatus;
+    const pay = peymentStatus;
+
+    if (!reg && !pay) {
+      setRegCardStatus(0);
+      setRegCardMessage("[!] REGISTRATION_PENDING");
+      setProgress(25);
+      setStep(1);
+      return;
     }
 
-    // Run once on mount (optional)
+    if (!reg && pay) {
+      setRegCardStatus(0);
+      setRegCardMessage("[!] REGISTRATION_PENDING");
+      setProgress(75);
+      setStep(2);
+      return;
+    }
+
+    if (reg && !pay) {
+      setRegCardStatus(0);
+      setRegCardMessage("[!] PAYMENT_PENDING");
+      setProgress(50);
+      setStep(2);
+      return;
+    }
+
+    if (reg && pay) {
+      setRegCardStatus(1);
+      setRegCardMessage("[✓] SEQUENCE_COMPLETE");
+      setProgress(100);
+      setStep(3);
+      setModification(false);
+      return;
+    }
+
+    setRegCardStatus(0);
+    setRegCardMessage("[!] REGISTRATION_PENDING");
+
+  }, [registrationStatus, peymentStatus]);
+
+
+  // responsive width tracker
+  useEffect(() => {
+
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+
     handleResize();
 
-    // Add listener
     window.addEventListener("resize", handleResize);
 
-    // Cleanup
     return () => {
-      // window.addEventListener("resize", setWidth(window.innerWidth));
       window.removeEventListener("resize", handleResize);
     };
+
   }, []);
 
 
@@ -438,7 +456,7 @@ export default function Home() {
                         hidden={!modification || userFormedit}
                       >
                         <span className="material-symbols-outlined text-sm">edit</span>
-                        Modify_Data
+                        ENABLE_DATA_MODIFICATION
                       </button>
 
 
@@ -623,20 +641,22 @@ export default function Home() {
                         </div>
                       </div>
 
+                      <div hidden={!registrationStatus}>
 
-                      <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
-                        onClick={() => {
-                          enableLoadingBar();
-                          // startRegistrationPayment();
-                          goForPayment()
-                        }}
-                        hidden={peymentStatus}
-                      >
-                        <span className="relative z-10 flex items-center justify-center gap-2">
-                          CLICK_TO_PAY <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                        </span>
-                        <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                      </button>
+                        <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
+                          onClick={() => {
+                            enableLoadingBar();
+                            // startRegistrationPayment();
+                            goForPayment()
+                          }}
+                          hidden={peymentStatus}
+                        >
+                          <span className="relative z-10 flex items-center justify-center gap-2">
+                            CLICK_TO_PAY <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                          </span>
+                          <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        </button>
+                      </div>
 
 
                       <button className="w-full relative overflow-hidden group py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold uppercase tracking-wider transition-all backdrop-blur-sm"
