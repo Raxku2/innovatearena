@@ -208,7 +208,7 @@ export default function Home() {
                           <span className="material-symbols-outlined text-(--neon-cyan) text-3xl animate-pulse">terminal</span>
                           <div className="flex flex-col">
                             <span className="font-display font-bold text-white tracking-wider text-sm">INNOVATE<span className="text-(--neon-cyan)">ARENA</span></span>
-                            <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V2.6</span>
+                            <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V0.3</span>
                           </div>
                         </div>
                       </div>
