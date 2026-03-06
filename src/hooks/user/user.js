@@ -17,14 +17,14 @@ const useUserDataIO = () => {
         setUserDepartment, setUserBatch, setPartnerStatus,
         setUserPaernerName, setUserPaernerdp, setUserPaernerId,
         setUserPaernerEmail, setUserReg, setLogin, email,
-        setPayStatus, settxn, userType, setuserType
+        setPayStatus, settxn, userType, setuserType, setSuper
 
     } = useUserDetailsStore();
 
     const { currentdepartment } = useDepartmentSelector();
     const { year } = useYearSelector();
 
-    const { disableLoadingBar, enableLoadingBar } = useEventDetailsStore();
+    const { disableLoadingBar, enableLoadingBar, setAdmins } = useEventDetailsStore();
 
 
     const { setUserToLocalStorage, getUserFromLocalStorage } = useUserAuthHook();
@@ -96,7 +96,14 @@ const useUserDataIO = () => {
                     setuserType(data.type);
                 }
 
+                if (data.super !== undefined && data.super !== null) {
+                    setSuper(data.super);
+                }
+                // console.log(data);
+
+
                 await giveRecods();
+                // await getAdminInfo();
 
                 setUserToLocalStorage(data)
             }
@@ -356,6 +363,8 @@ const useUserDataIO = () => {
         }
 
     }
+
+
     const createSchedule = async (title, time) => {
         if (userType != 'root') {
             return
@@ -404,6 +413,8 @@ const useUserDataIO = () => {
 
 
     }
+
+
     const updateSchedule = async (title, time, sch_id) => {
         if (userType != 'root') {
             return
@@ -547,6 +558,8 @@ const useUserDataIO = () => {
 
 
     }
+
+
     const updateRule = async (title, rule_id) => {
         if (userType != 'root') {
             return
@@ -597,7 +610,6 @@ const useUserDataIO = () => {
     }
 
 
-
     const deleteRule = async (rule_id) => {
         if (userType != 'root') {
             return
@@ -637,17 +649,290 @@ const useUserDataIO = () => {
             console.error("Profile fetch failed:", error);
             disableLoadingBar()
         }
+    }
+
+    // organizer 
+
+
+    const createOrganizer = async (name, role, dp = null) => {
+        if (userType != 'root') {
+            return
+        }
+
+        if (dp == '') {
+            dp = null
+        }
+
+        setAppStatus("creating...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/organizer`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "name": name,
+                        "role": role,
+                        "dp": dp
+                    })
+            });
+
+            if (res.status == 201) {
+                await getEventData();
+                setAppStatus("Created!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
 
 
     }
 
+    const updateOrganizer = async (name, id, dp, role) => {
+        if (userType != 'root') {
+            return
+        }
+
+        setAppStatus("updating...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/organizer/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "name": name,
+                        "role": role,
+                        "dp": dp
+                    })
+            });
+
+            if (res.status == 200) {
+                await getEventData();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
+
+
+    const deleteOrganizer = async (id) => {
+        if (userType != 'root') {
+            return
+        }
+        setAppStatus("deleting...")
+        enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/event/organizer/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (res.status == 204) {
+                await getEventData();
+                setAppStatus("deleted!");
+                disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+    }
+
+
+    // admin user 
+
+    const getAdminInfo = async () => {
+        if (userType != 'root') {
+            return
+        }
+        setAppStatus("initiating...")
+        // enableLoadingBar();
+        try {
+            const res = await fetch(BACKEND_API + `/root/admins/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (res.status == 200) {
+                const data = await res.json();
+                setAdmins(data)
+                // disableLoadingBar()
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+    }
+
+    const updateAdminInfo = async (id, params) => {
+        if (userType != 'root') {
+            return
+        }
+
+        setAppStatus("updating...")
+        // enableLoadingBar();
+        try {
+
+            const res = await fetch(BACKEND_API + `/root/admins/${userId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "target": id,
+                        "param": params
+                    })
+            });
+
+            if (res.status == 200) {
+                // await getEventData();
+                await getAdminInfo();
+                setAppStatus("updated!");
+                // disableLoadingBar()
+
+
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+
+    }
+
+
+    // csv data downloading 
+
+    const downloadRegCsv = async () => {
+        if (userType != 'root') {
+            return
+        }
+
+        setAppStatus('downloading...');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/root/reg/${userId}`); // Update with your actual API URL
+
+            if (!response.ok) {
+                throw new Error('Download failed from server');
+            }
+
+            // 2. Wait for the entire file to arrive and convert to Blob
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            // 3. Generate the timestamp for the filename (dd-mm-yy-hh-mm-ss)
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const yy = String(now.getFullYear()).slice(-2);
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
+            const ss = String(now.getSeconds()).padStart(2, '0');
+            const formattedDate = `${dd}-${mm}-${yy}-${hh}-${min}-${ss}`;
+
+            // 4. Create the hidden link and trigger download
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `innovatearena_registrations_${formattedDate}.csv`;
+            document.body.appendChild(link);
+            link.click();
+
+            // 5. Clean up memory
+            link.remove();
+            window.URL.revokeObjectURL(url);
+
+            setAppStatus('success!');
+            disableLoadingBar();
+
+        } catch (error) {
+            console.error('Error downloading:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+    };
 
     return {
         getFullUserInfo, deleteSchedule,
         updateUserInfo, updateSchedule,
         createPartner, createSchedule,
         syncPartnerInfo, removePartnerInfo,
-        createRule, updateRule, deleteRule
+        createRule, updateRule, deleteRule,
+        createOrganizer, updateOrganizer,
+        deleteOrganizer, getAdminInfo,
+        updateAdminInfo, downloadRegCsv
     }
 
 
