@@ -7,7 +7,7 @@ const useInnovateArenaPayment = () => {
     const REDION = import.meta.env.VITE_REDION;
     const RAZOR_KEY = import.meta.env.VITE_RAZOR_KEY;
 
-    const { disableLoadingBar, setAppStatus } = useEventDetailsStore();
+    const { disableLoadingBar, enableLoadingBar, setAppStatus } = useEventDetailsStore();
     const { userId, userName, email, phone, team_id } = useUserDetailsStore();
     const { getFullUserInfo } = useUserDataIO();
 
@@ -134,6 +134,7 @@ const useInnovateArenaPayment = () => {
             console.log("no user id");
             return
         }
+        enableLoadingBar();
         try {
 
             const orderToken = await fetch(`${BACKEND_API}/pay/token/${userId}`,  // ❗ removed extra space
@@ -149,9 +150,9 @@ const useInnovateArenaPayment = () => {
             if (orderToken.status == 201) {
                 const order = await orderToken.json();
                 // console.log(order);
-                window.location.href = REDION+'/panoroma/'+order
+                window.location.href = REDION + '/panoroma/' + order
                 // console.log(REDION);
-                
+
                 // disableLoadingBar();
 
             }

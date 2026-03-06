@@ -12,17 +12,15 @@ export default function App() {
   const { enableLoadingBar, disableLoadingBar, LoadingBar } = useEventDetailsStore();
   const { getUserFromLocalStorage } = useUserAuthHook();
   const { getEventData } = UseStartup();
-  const { getFullUserInfo } = useUserDataIO();
+  const { getFullUserInfo,getAdminInfo } = useUserDataIO();
   const { giveRecods } = useAdminControls();
 
   useGoogleAuth();
 
   useEffect(() => {
     ; (async function () {
-      // getUserFromLocalStorage();
       await getEventData();
       await getFullUserInfo();
-      // console.log("Hello");
       getUserFromLocalStorage();
     })();
   }, []);

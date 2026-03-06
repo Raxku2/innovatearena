@@ -18,6 +18,7 @@ const useUserDetailsStore = create((set) => ({
     team_id: '',
     partnerid: '',
     partner_status: false,
+    super_mode: false,
 
 
     setLogin: (username, email, dp, user_id, actype, teamId) => set({
@@ -53,6 +54,7 @@ const useUserDetailsStore = create((set) => ({
     setPayStatus: (param) => set({ peymentStatus: param }),
     settxn: (param) => set({ txnId: param }),
     setuserType: (param) => set({ userType: param }),
+    setSuper: (param) => set({ super_mode: param })
 
 }))
 

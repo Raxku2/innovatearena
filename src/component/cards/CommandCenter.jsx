@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAdminControls } from '../../hooks';
+import { useAdminControls, useUserDataIO } from '../../hooks';
 import { useEventDetailsStore } from '../../stores';
 
 export default function CommandCenter() {
@@ -7,6 +7,7 @@ export default function CommandCenter() {
 
     const { giveRecods } = useAdminControls();
     const { enableLoadingBar, disableLoadingBar } = useEventDetailsStore();
+    const { downloadRegCsv } = useUserDataIO();
 
     return (
         <div className="glass-panel border-t-2 border-neon-cyan rounded-xl p-6">
@@ -33,6 +34,16 @@ export default function CommandCenter() {
                 </button>
 
 
+
+                <button className="w-full py-2 bg-slate-800 hover:bg-neon-pink/10 border border-slate-600 hover:border-neon-pink text-slate-300 hover:text-white text-xs font-mono transition-all flex items-center px-4"
+
+                    onClick={async () => {
+                        downloadRegCsv();
+                    }}
+                >
+                    <span className="mr-auto">&gt; DOWNLOAD_CSV_DATA</span>
+                    <span className="material-symbols-outlined text-xs">download</span>
+                </button>
 
                 {/* <button className="w-full py-2 bg-slate-800 hover:bg-neon-yellow/10 border border-slate-600 hover:border-neon-yellow text-slate-300 hover:text-white text-xs font-mono transition-all flex items-center px-4">
                     <span className="mr-auto">&gt; BROADCAST_ALERT</span>

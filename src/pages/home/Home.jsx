@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Landing from './Landing'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores'
-import { DateCounter, DepartmentMatrix, Navbar1, Radar, RuleCard, ScheduleCard } from '../../component';
+import { AdminController, CommandCenter, DateCounter, DepartmentMatrix, Navbar1, OrganizerDeck, Radar, RuleCard, ScheduleCard } from '../../component';
 import clsx from 'clsx';
 import { useAdminControls, useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
 import { useNavigate } from 'react-router'
 import { motion, AnimatePresence } from 'motion/react'
-import CommandCenter from '../../component/cards/CommandCenter';
 
 export default function Home() {
   // hooks
@@ -219,30 +218,6 @@ export default function Home() {
                           <span>PROFILE</span>
                           <span className="ml-auto w-1 h-1 bg-(--neon-pink) rounded-full shadow-[0_0_5px_#ff0055]"></span>
                         </a>
-                        {/* 
-                  <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                    <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">calendar_month</span>
-                    <span>SCHEDULE</span>
-                    { <span className="ml-auto w-1 h-1 bg-(--neon-pink) rounded-full shadow-[0_0_5px_#ff0055]"></span> }
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">gavel</span>
-                  <span>RULES</span>
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group relative" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">notifications</span>
-                  <span>NOTIFICATIONS</span>
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-(--neon-pink) rounded-full animate-pulse-fast shadow-[0_0_8px_#ff0055]"></span>
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">verified</span>
-                  <span>CERTIFICATES</span>
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">help</span>
-                  <span>QUERIES</span>
-                </a>
-                    */}
                       </nav>
 
                       <div className="p-4 border-t border-slate-800">
@@ -831,6 +806,18 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
+
+                    {/* organizers  */}
+                    <div className="col-span-1 md:col-span-5 glass-panel border neon-border-cyan rounded-xl p-6 relative overflow-hidden group flex flex-col">
+                      <OrganizerDeck />
+
+                    </div>
+
+                    {/* admin control */}
+                    <div className="col-span-1 md:col-span-7 glass-panel border neon-border-pink rounded-xl p-6 relative overflow-hidden group flex flex-col" hidden={!(userType == 'root')}>
+                      <AdminController />
+                    </div>
+
                   </div>
 
                   {/* \admin */}

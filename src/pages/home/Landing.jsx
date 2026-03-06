@@ -487,6 +487,7 @@ export default function Landing() {
                             </div>
                         </div>
                     </section>
+
                     <section className="py-24 px-6 bg-surface-hacker border-t border-(--neon-cyan)/20">
                         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
                             <div className="flex flex-col gap-6">
@@ -525,6 +526,8 @@ export default function Landing() {
                             </div>
                         </div>
                     </section>
+
+                    
                 </main>
 
             </div>
