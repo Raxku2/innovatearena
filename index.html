@@ -37,18 +37,18 @@
   <meta name="author" content="Yantrayodha Club AIEM">
 
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://your-link-here.com/">
+  <meta property="og:url" content="https://innovatearena.vercel.app">
   <meta property="og:title" content="InnovateArena | Where Code Becomes Art">
   <meta property="og:description"
     content="The premier battleground for frontend architects. 6 Domains. 5 Hours. Infinite Creativity. Hosted by Yantrayodha Club.">
-  <meta property="og:image" content="https://your-link-here.com/assets/og-banner.jpg">
+  <meta property="og:image" content="https://innovatearena.vercel.app/innovatearena.png">
 
   <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content="https://your-link-here.com/">
+  <meta property="twitter:url" content="https://innovatearena.vercel.app">
   <meta property="twitter:title" content="InnovateArena | Frontend Championship">
   <meta property="twitter:description"
     content="Push the boundaries of UI/UX. No Bootstrap. No limits. Just pure innovation at AIEM.">
-  <meta property="twitter:image" content="https://your-link-here.com/assets/og-banner.jpg">
+  <meta property="twitter:image" content="https://innovatearena.vercel.app/innovatearena.png">
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#040810">
@@ -84,7 +84,7 @@
 }
 </script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
 
   <script>
     tailwind.config = {
@@ -112,6 +112,8 @@
             'scan': 'scan 2s linear infinite',
             'float': 'float 6s ease-in-out infinite',
             'loading': 'loading 2s ease-in-out infinite',
+            'spin-slow': 'spin 8s linear infinite',
+            'spin-fast': 'spin 1s linear infinite',
           },
           keyframes: {
             glitch: {
@@ -131,7 +133,14 @@
               '0%': { width: '0%' },
               '50%': { width: '75%' },
               '100%': { width: '75%' },
+            },
+            laser: {
+              '0%': { top: '0%', opacity: '0' },
+              '10%': { opacity: '1' },
+              '90%': { opacity: '1' },
+              '100%': { top: '100%', opacity: '0' },
             }
+
           }
         },
       },

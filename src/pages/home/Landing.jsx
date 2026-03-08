@@ -36,7 +36,7 @@ export default function Landing() {
 
     return (
         <div className="font-body text-slate-200 antialiased overflow-x-hidden selection:bg-(--neon-pink) selection:text-white">
-            
+
             <div className="fixed inset-0 z-100 crt-overlay pointer-events-none"></div>
             <div className="fixed inset-0 z-0 pointer-events-none scanline"></div>
 
@@ -459,7 +459,7 @@ export default function Landing() {
                                 </div>
                                 <div className="relative flex flex-col md:flex-row md:items-center group">
                                     <div className="hidden md:block w-1/2 text-right pr-12">
-                                        <span className="text-(--neon-pink) font-mono text-lg font-bold bg-(--neon-pink)/10 px-2 py-1 rounded border border-(--neon-pink)/30">MARCH 20</span>
+                                        <span className="text-(--neon-pink) font-mono text-lg font-bold bg-(--neon-pink)/10 px-2 py-1 rounded border border-(--neon-pink)/30">{registrationClose}</span>
                                     </div>
                                     <div className="absolute -left-1.5 md:left-1/2 md:-ml-2 w-4 h-4 bg-black border-2 border-slate-600 group-hover:border-(--neon-pink) rounded-full z-10 group-hover:scale-150 group-hover:bg-(--neon-pink) group-hover:shadow-[0_0_20px_rgba(255,0,85,0.8)] transition-all duration-300"></div>
                                     <div className="pl-8 md:pl-12 w-full md:w-1/2">
@@ -487,6 +487,7 @@ export default function Landing() {
                             </div>
                         </div>
                     </section>
+
                     <section className="py-24 px-6 bg-surface-hacker border-t border-(--neon-cyan)/20">
                         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12">
                             <div className="flex flex-col gap-6">
@@ -525,6 +526,8 @@ export default function Landing() {
                             </div>
                         </div>
                     </section>
+
+                    
                 </main>
 
             </div>

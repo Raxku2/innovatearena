@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useEventDetailsStore, useUserDetailsStore } from "../../stores"
-import { useUserDataIO } from "../user/user";
+// import { useUserDataIO } from "../user/user";
 import useDepartmentSelector from "../inputs/deptselector";
 import useYearSelector from "../inputs/yearselector";
 
@@ -23,18 +23,20 @@ const useUserAuthHook = () => {
             const data = datainstorage ? await JSON.parse(datainstorage) : null;
             if (data) {
 
-                console.log(data);
-                setLogin(data.name, data.email, data.dp, data._id, data.type, data.team_id);
-                setUserDepartment(data.dept);
-                setUserReg(data.reg_status);
+                // console.log(data);
+                setLogin(data.name ? data.name : '', data.email ? data.email : '', data.dp ? data.dp : '', data._id ? data._id : '', data.type ? data.type : '', data.team_id ? data.team_id : '');
+                data.dept && setUserDepartment(data.dept);
+                data.reg_status && setUserReg(data.reg_status);
                 setPartnerStatus(data.partnerId ? true : false);
-                setPayStatus(data.payment_status);
-                setUserPaernerEmail(data.partnerEmail);
-                settxn(data.txn);
-                setUserPaernerId(data.partnerId);
-                setUserPaernerName(data.partnerName);
-                setUserBatch(data.batch);
-                setUserPhone(data.phone);
+                data.payment_status && setPayStatus(data.payment_status);
+                data.partnerEmail && setUserPaernerEmail(data.partnerEmail);
+                data.txn && settxn(data.txn);
+                data.partnerId && setUserPaernerId(data.partnerId);
+                data.partnerName && setUserPaernerName(data.partnerName);
+                data.batch && setUserBatch(data.batch);
+                data.phone && setUserPhone(data.phone);
+                // console.log(data);
+
 
             } else {
                 // return

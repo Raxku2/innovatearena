@@ -1,104 +1,167 @@
 import React, { useEffect, useState } from 'react'
 import Landing from './Landing'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores'
-import { DateCounter, Navbar1 } from '../../component';
+import { AdminController, CommandCenter, DateCounter, DepartmentMatrix, Navbar1, OrganizerDeck, Radar, RuleCard, ScheduleCard } from '../../component';
 import clsx from 'clsx';
-import { useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
+import { useAdminControls, useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
 import { useNavigate } from 'react-router'
+import { motion, AnimatePresence } from 'motion/react'
 
 export default function Home() {
-  const { userType } = useUserDetailsStore();
+  // hooks
+  const { goForPayment } = useInnovateArenaPayment();
+  const navigate = useNavigate();
+  const { removeUser } = useUserAuthHook();
+  const { giveRecods } = useAdminControls();
 
+
+  // zustand stores
   const {
     dp, userName, email, userId,
     peymentStatus, registrationStatus,
-    department, batch, phone, partnerName,
-    partneremail, team_id, setUserName,
-    partner_status, setUserPhone,
-    setUserPaernerName, setUserPaernerEmail,
-    txnId
+    department, batch, phone,
+    partnerName, partneremail,
+    team_id, txnId, userType,
+    partner_status,
+
+    setUserName,
+    setUserPhone,
+    setUserPaernerName,
+    setUserPaernerEmail,
+    setPartnerStatus,
+    setUserPaernerId,
   } = useUserDetailsStore();
 
+  const {
+    enableLoadingBar,
+    AppStatus,
+    rules,
+    schedules,
+    matrix
+  } = useEventDetailsStore();
 
-  const navigate = useNavigate();
+
+  // custom hooks
+  const { year, setYear, validYears } = useYearSelector();
+  const { currentdepartment, setDepartment, validDepartments } = useDepartmentSelector();
 
   const {
-    enableLoadingBar, AppStatus
-  } = useEventDetailsStore();
+    getFullUserInfo,
+    updateUserInfo,
+    createSchedule,
+    createPartner,
+    syncPartnerInfo,
+    removePartnerInfo,
+    createRule,
+  } = useUserDataIO();
+
+
+  // local states
   const [regCardStatus, setRegCardStatus] = useState(0);
   const [regCardMessage, setRegCardMessage] = useState("");
   const [progress, setProgress] = useState(25);
   const [step, setStep] = useState(1);
 
-
-  const { year, setYear, validYears } = useYearSelector();
-  const {
-    currentdepartment, setDepartment, validDepartments
-  } = useDepartmentSelector();
-
-
-
-
   const [userFormedit, setUserFormedit] = useState(false);
   const [partnerFormedit, setPartnerFormedit] = useState(false);
-  const [
-    partnerCardVisibility, setparnrtCardVisibility
-  ] = useState(false);
-  const { removeUser } = useUserAuthHook();
 
-  const {
-    getFullUserInfo, updateUserInfo,
-    createPartner, syncPartnerInfo, removePartnerInfo,
-  } = useUserDataIO();
+  const [partnerCardVisibility, setparnrtCardVisibility] = useState(false);
 
   const [modification, setModification] = useState(true);
 
+
+  // schedule creation
+  const [scheduleAddPrompt, setScheduleAddPrompt] = useState(false);
+  const [newScheduleTime, setNewScheduleTime] = useState('');
+  const [newScheduleTitle, setNewScheduleTitle] = useState('');
+
+  // rule creation
+  const [ruleAddPrompt, setRuleAddPrompt] = useState(false);
+  const [newRuleTitle, setNewRuleTitle] = useState('');
+
+
+  // UI controls
+  const [isOpen, setIsOpen] = useState(false);
+  const [pagewidth, setWidth] = useState('');
+
+
+  // partner card visibility
   useEffect(() => {
     if (partnerName && partneremail) {
       setparnrtCardVisibility(true);
     }
-  }, [partnerName, partneremail])
+  }, [partnerName, partneremail]);
 
+
+  // fetch user data
   useEffect(() => {
-    getFullUserInfo();
-  }, [userId])
+    if (userId) {
+      getFullUserInfo();
+    }
+  }, [userId]);
 
 
+  // registration status logic
   useEffect(() => {
-    if (!registrationStatus && !peymentStatus) {
+
+    const reg = registrationStatus;
+    const pay = peymentStatus;
+
+    if (!reg && !pay) {
       setRegCardStatus(0);
       setRegCardMessage("[!] REGISTRATION_PENDING");
       setProgress(25);
       setStep(1);
+      return;
     }
-    else if (!registrationStatus && peymentStatus) {
+
+    if (!reg && pay) {
       setRegCardStatus(0);
-      setRegCardMessage("[!] REGISTRATION_PENDING")
+      setRegCardMessage("[!] REGISTRATION_PENDING");
       setProgress(75);
       setStep(2);
+      return;
     }
-    else if (registrationStatus && !peymentStatus) {
+
+    if (reg && !pay) {
       setRegCardStatus(0);
-      setRegCardMessage("[!] PAYMENT_PENDING")
+      setRegCardMessage("[!] PAYMENT_PENDING");
       setProgress(50);
       setStep(2);
+      return;
     }
-    else if (registrationStatus && peymentStatus) {
+
+    if (reg && pay) {
       setRegCardStatus(1);
-      setRegCardMessage("[✓] SEQUENCE_COMPLETE")
+      setRegCardMessage("[✓] SEQUENCE_COMPLETE");
       setProgress(100);
       setStep(3);
       setModification(false);
-    }
-    else {
-      setRegCardStatus(0);
-      setRegCardMessage("[!] REGISTRATION_PENDING")
+      return;
     }
 
-  }, [registrationStatus, peymentStatus])
+    setRegCardStatus(0);
+    setRegCardMessage("[!] REGISTRATION_PENDING");
+
+  }, [registrationStatus, peymentStatus]);
 
 
-  const { startRegistrationPayment } = useInnovateArenaPayment();
+  // responsive width tracker
+  useEffect(() => {
+
+    function handleResize() {
+      setWidth(window.innerWidth);
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+
+  }, []);
 
 
   return (
@@ -109,74 +172,77 @@ export default function Home() {
       </div>
       }
 
-      {userType === 'user' && (
+      {userType && (
         <div>
           <div className="font-body text-slate-300 antialiased overflow-hidden selection:bg-(--neon-pink) selection:text-white h-screen flex flex-col">
-            <div classNaremoveUserme="fixed inset-0 z-100 crt-overlay pointer-events-none"></div>
+            <div className="fixed inset-0 z-100 crt-overlay pointer-events-none"></div>
             <div className="flex h-full w-full relative z-10">
 
-              <aside className="w-full md:w-64 h-full hidden md:flex flex-col bg-black/80 border-r border-slate-800 relative z-20">
-                <div className="h-20 flex items-center px-6 border-b border-slate-800">
-                  <div className="flex items-center gap-3">
-                    <span className="material-symbols-outlined text-(--neon-cyan) text-3xl animate-pulse">terminal</span>
-                    <div className="flex flex-col">
-                      <span className="font-display font-bold text-white tracking-wider text-sm">INNOVATE<span className="text-(--neon-cyan)">ARENA</span></span>
-                      <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V2.6</span>
-                    </div>
-                  </div>
-                </div>
-                <nav className="flex-1 py-8 space-y-2 px-2 font-mono text-sm">
-                  <a className="sidebar-link active flex items-center gap-4 px-4 py-3 text-white rounded-r-lg" href="#">
-                    <span className="material-symbols-outlined text-lg">person</span>
-                    <span>PROFILE</span>
-                    <span className="ml-auto w-1 h-1 bg-(--neon-pink) rounded-full shadow-[0_0_5px_#ff0055]"></span>
-                  </a>
-                  {/* 
-                  <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                    <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">calendar_month</span>
-                    <span>SCHEDULE</span>
-                    { <span className="ml-auto w-1 h-1 bg-(--neon-pink) rounded-full shadow-[0_0_5px_#ff0055]"></span> }
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">gavel</span>
-                  <span>RULES</span>
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group relative" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">notifications</span>
-                  <span>NOTIFICATIONS</span>
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-(--neon-pink) rounded-full animate-pulse-fast shadow-[0_0_8px_#ff0055]"></span>
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">verified</span>
-                  <span>CERTIFICATES</span>
-                </a>
-                <a className="sidebar-link flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-r-lg group" href="#">
-                  <span className="material-symbols-outlined text-lg group-hover:text-(--neon-cyan) transition-colors">help</span>
-                  <span>QUERIES</span>
-                </a>
-                    */}
-                </nav>
 
-                <div className="p-4 border-t border-slate-800">
-                  <button className="bg-slate-900/50 rounded border border-slate-700 p-3 flex items-center gap-3 group cursor-pointer hover:border-neon-cyan transition-colors"
-                    onClick={() => {
-                      enableLoadingBar();
-                      removeUser();
-                      navigate('/');
-                      window.location.reload();
-                    }}
-                  >
-                    <div className="w-8 h-8 rounded bg-neon-cyan/20 flex items-center justify-center text-neon-cyan">
-                      <span className="material-symbols-outlined text-sm">logout</span>
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="text-xs font-bold text-white group-hover:text-neon-cyan">TERMINATE</span>
-                      <span className="text-[10px] text-slate-500 font-mono text-wrap">TEAM ID: #{team_id}</span>
-                    </div>
-                  </button>
-                </div>
+              <AnimatePresence>
 
-              </aside>
+                {(isOpen || pagewidth >= 1280) && (
+                  <>
+                    {/* Overlay (mobile only) */}
+                    {isOpen && (
+                      <motion.div
+                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-300 xl:hidden"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsOpen(false)}
+                      />
+                    )}
+
+                    <motion.aside
+                      initial={{ x: -300 }}
+                      animate={{
+                        x: isOpen || pagewidth >= 1280 ? 0 : -300
+                      }}
+                      exit={{ x: -300 }}
+                      transition={{ type: "spring", stiffness: 260, damping: 25 }}
+                      className="fixed xl:relative w-64 h-full bg-black/90 border-r border-slate-800 z-400 flex flex-col"
+                    >
+                      <div className="h-20 flex items-center px-6 border-b border-slate-800">
+                        <div className="flex items-center gap-3">
+                          <span className="material-symbols-outlined text-(--neon-cyan) text-3xl animate-pulse">terminal</span>
+                          <div className="flex flex-col">
+                            <span className="font-display font-bold text-white tracking-wider text-sm">INNOVATE<span className="text-(--neon-cyan)">ARENA</span></span>
+                            <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V0.3</span>
+                          </div>
+                        </div>
+                      </div>
+                      <nav className="flex-1 py-8 space-y-2 px-2 font-mono text-sm">
+                        <a className="sidebar-link active flex items-center gap-4 px-4 py-3 text-white rounded-r-lg" href="#">
+                          <span className="material-symbols-outlined text-lg">person</span>
+                          <span>PROFILE</span>
+                          <span className="ml-auto w-1 h-1 bg-(--neon-pink) rounded-full shadow-[0_0_5px_#ff0055]"></span>
+                        </a>
+                      </nav>
+
+                      <div className="p-4 border-t border-slate-800">
+                        <button className="bg-slate-900/50 rounded border border-slate-700 p-3 flex items-center gap-3 group cursor-pointer hover:border-neon-cyan transition-colors"
+                          onClick={() => {
+                            enableLoadingBar();
+                            removeUser();
+                            navigate('/');
+                            window.location.reload();
+                          }}
+                        >
+                          <div className="w-8 h-8 rounded bg-neon-cyan/20 flex items-center justify-center text-neon-cyan">
+                            <span className="material-symbols-outlined text-sm">logout</span>
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-bold text-white group-hover:text-neon-cyan">TERMINATE</span>
+                            <span className="text-[10px] text-slate-500 font-mono text-wrap">TEAM ID: #{team_id}</span>
+                          </div>
+                        </button>
+                      </div>
+
+                    </motion.aside>
+                  </>)}
+
+              </AnimatePresence>
 
               <main className="flex-1 flex flex-col h-full overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-125 h-125 bg-(--neon-cyan)/5 rounded-full blur-[120px] pointer-events-none"></div>
@@ -184,7 +250,10 @@ export default function Home() {
 
 
 
-                <header className="h-20 flex items-center justify-between px-8 border-b border-slate-800/50 bg-black/20 backdrop-blur-md z-30">
+                <header className="h-20 flex items-center justify-between px-8 border-b border-slate-800/50 bg-black/20 backdrop-blur-md z-30"
+
+                  onClick={() => setIsOpen(true)}
+                >
                   <div className="flex flex-col">
                     <h1 className="text-white font-display font-bold  text-xs md:text-sm  tracking-wide flex items-center gap-2">
                       <span className="text-(--neon-green) text-xs md:text-lg font-mono capitalize">[ STATUS: {AppStatus.toUpperCase()} ]</span>
@@ -224,11 +293,12 @@ export default function Home() {
                     <div className={clsx("col-span-1 md:col-span-8 glass-panel rounded-xl p-6 relative overflow-hidden group", regCardStatus == 0 ? " neon-border-yellow " : " neon-border-cyan ")}>
                       <div className="scan-line-anim opacity-20"></div>
 
-                      <div className="flex justify-between items-start mb-6 relative z-10">
+                      <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
                         <div>
-                          <h3 className={clsx("font-display font-bold text-lg tracking-wider mb-1", regCardStatus == 0 ? "text-(--neon-yellow) " : "text-(--neon-green) ")} >REGISTRATION_PROTOCOL</h3>
+                          <h3 className={clsx("font-display font-bold text-lg text-wrap tracking-wider mb-1", regCardStatus == 0 ? "text-(--neon-yellow) " : "text-(--neon-green) ")} >REGISTRATION_PROTOCOL</h3>
                           <p className="text-xs font-mono text-slate-400">Unique ID: <span className="text-white">{email}</span></p>
                         </div>
+
                         <div className={clsx("px-3 py-1  border text-xs font-mono font-bold rounded animate-pulse", regCardStatus == 0 ? "bg-(--neon-yellow)/10 border-neon-yellow/30 text-(--neon-yellow) " : "bg-(--neon-green)/10 border-neon-cyan/30 text-(--neon-green) ")}>
                           {regCardMessage}
                         </div>
@@ -290,13 +360,13 @@ export default function Home() {
                           <select
                             value={currentdepartment}
                             onChange={(e) => setDepartment(e.target.value)}
-                            className={`
-            w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none
-             ${currentdepartment === ''
+                            className={`w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none 
+                              ${currentdepartment === ''
                                 ? 'text-slate-500'
                                 : 'text-white'
                               }
-          `} disabled={!userFormedit}
+                              `}
+                            disabled={!userFormedit}
                           >
                             {/* Placeholder Option */}
                             <option value="" disabled className="bg-transparent text-slate-500">
@@ -321,14 +391,14 @@ export default function Home() {
                           <select
                             value={year}
                             onChange={(e) => setYear(e.target.value)}
-                            className={`
-            w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none
-            ${year === ''
+                            className={`w-[70%] appearance-none bg-transparent border-none text-sm p-0 text-center transition-all duration-300 outline-none
+                              ${year === ''
                                 ? 'text-slate-500'
                                 : 'text-white'
-                              }
-          `} disabled={!userFormedit}
+                              }`}
+                            disabled={!userFormedit}
                           >
+
                             {/* Placeholder Option */}
                             <option value="" disabled className="bg-transparent  text-slate-500">
                               [ SELECT_YEAR ]
@@ -361,7 +431,7 @@ export default function Home() {
                         hidden={!modification || userFormedit}
                       >
                         <span className="material-symbols-outlined text-sm">edit</span>
-                        Modify_Data
+                        ENABLE_DATA_MODIFICATION
                       </button>
 
 
@@ -467,6 +537,12 @@ export default function Home() {
                           onClick={() => {
                             enableLoadingBar();
                             removePartnerInfo();
+
+                            setPartnerStatus(false);
+                            setUserPaernerEmail('');
+                            setUserPaernerName('');
+                            setUserPaernerId('');
+                            setparnrtCardVisibility(false);
                           }}
                         >
                           <span className="material-symbols-outlined text-sm">delete</span>
@@ -483,7 +559,8 @@ export default function Home() {
                           <span className="material-symbols-outlined text-slate-500 group-hover:text-white">add</span>
                         </div>
                         <h4 className="text-white font-bold text-sm">NO_SQUAD_DETECTED</h4>
-                        <p className="text-slate-500 text-xs font-mono mt-1 mb-4">Join a cluster or initiate a new protocol.</p>
+                        <p className="text-slate-500 text-xs font-mono mt-1 mb-4"
+                          hidden={peymentStatus}>Join a cluster or initiate a new protocol.</p>
 
                         <div className=" " >
                           <button className="py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border w-full border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all"
@@ -540,19 +617,22 @@ export default function Home() {
                         </div>
                       </div>
 
+                      <div hidden={!registrationStatus}>
 
-                      {/* <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
-                        onClick={() => {
-                          enableLoadingBar();
-                          startRegistrationPayment();
-                        }}
-                        hidden={peymentStatus}
-                      >
-                        <span className="relative z-10 flex items-center justify-center gap-2">
-                          CLICK_TO_PAY <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                        </span>
-                        <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                      </button> */}
+                        <button className="w-full relative overflow-hidden group py-3 bg-neon-cyan hover:bg-cyan-400 text-black font-display font-bold uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(0,243,255,0.6)]"
+                          onClick={() => {
+                            enableLoadingBar();
+                            // startRegistrationPayment();
+                            goForPayment()
+                          }}
+                          hidden={peymentStatus}
+                        >
+                          <span className="relative z-10 flex items-center justify-center gap-2">
+                            CLICK_TO_PAY <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                          </span>
+                          <div className="absolute inset-0 bg-white/30 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                        </button>
+                      </div>
 
 
                       <button className="w-full relative overflow-hidden group py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold uppercase tracking-wider transition-all backdrop-blur-sm"
@@ -567,19 +647,263 @@ export default function Home() {
 
                     </div>
 
-                    {/* footer sec */}
-                    <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
-                      <span>SYSTEM_ID: <span className="text-slate-400">NODE_001_ALPHA</span></span>
-                      <div className="flex gap-4">
-                        <a className="hover:text-neon-cyan transition-colors" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
-                        <a className="hover:text-neon-pink transition-colors" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>
-                        <a className="hover:text-neon-yellow transition-colors" href="#">SUPPORT_CHANNEL</a>
+                    {/* schedule   */}
+
+
+                    <div className="col-span-1 md:col-span-7 glass-panel border border-slate-700/50 rounded-xl p-0 relative overflow-hidden group flex flex-col">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-neon-cyan/5 rounded-full blur-2xl pointer-events-none"></div>
+                      <div className="p-6 border-b border-slate-800 bg-black/20 backdrop-blur-sm flex justify-between items-center z-10">
+                        <div>
+                          <h3 className="text-white font-display font-bold text-sm tracking-widest flex items-center gap-2">
+                            <span className="w-1 h-4 bg-neon-cyan"></span>
+                            SCHEDULE_LOGS
+                          </h3>
+                          <p className="text-[10px] font-mono text-slate-500 mt-1 pl-3">UPCOMING_EVENT_NODES</p>
+                        </div>
+                        <div className="flex gap-2">
+                          <div className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></div>
+                        </div>
+                      </div>
+                      <div className="p-6 relative z-10 flex-1 overflow-hidden">
+                        <div className="space-y-3 font-mono text-xs">
+
+                          {/* <ScheduleCard time_prop="10:00" title_prop="Meeting" id_prop="1" /> */}
+
+                          {
+                            schedules.map((e, i) => {
+                              // console.log(e);
+
+                              return (
+                                <ScheduleCard time_prop={e.time} title_prop={e.title} id_prop={e.id} key={i} />
+                              )
+                            })
+
+                          }
+
+
+                        </div>
+                        <button className="mt-6 w-full py-3 border border-dashed border-slate-600 hover:border-neon-cyan text-slate-500 hover:text-neon-cyan text-xs font-mono uppercase transition-all flex items-center justify-center gap-2 group/btn"
+                          onClick={e => setScheduleAddPrompt(true)}
+                          hidden={!(userType == 'root')}
+                        >
+                          <span className="material-symbols-outlined text-sm group-hover/btn:rotate-90 transition-transform">add</span>
+                          INITIALIZE_SCHEDULE
+                        </button>
+                      </div>
+
+
+                      <div hidden={!(userType == 'root')}>
+
+                        <div className="absolute inset-0 bg-black/90 backdrop-blur-sm z-50 flex flex-col items-center justify-center p-8 text-center space-y-6" hidden={!scheduleAddPrompt}>
+
+                          <h4 className="text-white font-display font-bold text-xl tracking-widest text-neon-cyan">CREATE_NODE</h4>
+                          <input className="bg-slate-900 border border-neon-cyan/50 text-white font-mono text-sm px-4 py-2 w-full max-w-xs focus:ring-1 focus:ring-neon-cyan outline-none" type="text" value={newScheduleTime} onChange={e => setNewScheduleTime(e.target.value)} placeholder='> time ?'
+
+                          />
+
+                          <input className="bg-slate-900 border border-neon-cyan/50 text-white font-mono text-sm px-4 py-2 w-full max-w-xs focus:ring-1 focus:ring-neon-cyan outline-none" type="text" value={newScheduleTitle} onChange={e => setNewScheduleTitle(e.target.value)} placeholder='> title ?'
+
+                          />
+
+                          <div className="flex gap-4">
+
+                            <button className="px-4 py-2 border border-neon-green/50 text-neon-green font-mono text-xs uppercase hover:bg-neon-green/10 transition-colors"
+                              onClick={async () => {
+                                await createSchedule(newScheduleTitle, newScheduleTime)
+                                setNewScheduleTime('')
+                                setNewScheduleTitle('')
+                                setScheduleAddPrompt(false)
+                              }}
+
+                            >ADD_SCHEDULE</button>
+
+                            <button className="px-4 py-2 border border-slate-600 text-slate-400 font-mono text-xs uppercase hover:bg-slate-800 transition-colors"
+                              onClick={e => setScheduleAddPrompt(false)}
+                            >DISCARD_DATA</button>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+                    </div>
+
+
+
+                    {/* rules  */}
+                    <div className="col-span-1 md:col-span-5 glass-panel border border-slate-700/50 rounded-xl p-0 relative overflow-hidden group flex flex-col">
+                      <div className="absolute top-0 left-0 w-32 h-32 bg-neon-pink/5 rounded-full blur-2xl pointer-events-none"></div>
+                      <div className="p-6 border-b border-slate-800 bg-black/20 backdrop-blur-sm flex justify-between items-center z-10">
+                        <div>
+                          <h3 className="text-white font-display font-bold text-sm tracking-widest flex items-center gap-2">
+                            <span className="w-1 h-4 bg-neon-pink"></span>
+                            RULE_PROTOCOLS
+                          </h3>
+                          <p className="text-[10px] font-mono text-slate-500 mt-1 pl-3">SYSTEM_CONSTRAINTS</p>
+                        </div>
+                        <span className="material-symbols-outlined text-neon-pink/50 text-xl">security</span>
+                      </div>
+                      <div className="p-6 relative z-10 flex-1 flex flex-col">
+                        <div className="space-y-1 font-mono text-xs flex-1">
+
+
+                          {/* <RuleCard /> */}
+
+                          {
+                            rules.map((e, i) => {
+                              // console.log(e);
+
+                              return (
+                                <RuleCard title_prop={e.title} id_prop={e.id} index_prop={i} key={i} />
+                              )
+                            })
+
+                          }
+
+
+
+                        </div>
+                        <button className="mt-6 w-full py-3 border border-dashed border-slate-600 hover:border-neon-pink text-slate-500 hover:text-neon-pink text-xs font-mono uppercase transition-all flex items-center justify-center gap-2 group/btn" hidden={!(userType == 'root')}
+                          onClick={() => {
+                            setRuleAddPrompt(true);
+                          }}>
+                          <span className="material-symbols-outlined text-sm group-hover/btn:rotate-90 transition-transform">add</span>
+                          INITIALIZE_RULE
+                        </button>
+                      </div>
+
+
+
+                      <div hidden={!(userType == 'root')}>
+
+                        <div className=" inset-0 bg-black/95 backdrop-blur-md z-50 flex flex-col items-center justify-center p-8 text-center space-y-6 absolute transition-opacity duration-300"
+                          hidden={!ruleAddPrompt}
+                        >
+
+                          <h4 className="text-white font-display font-bold text-lg tracking-widest text-neon-pink">EDIT_PROTOCOL_03</h4>
+                          <div className="w-full max-w-xs text-left">
+                            <label className="text-[10px] text-slate-500 font-mono mb-1 block"
+
+                            >RULE_DEFINITION</label>
+                            <input className="w-full bg-slate-900 border border-neon-pink/50 text-white font-mono text-sm px-4 py-2 focus:ring-1 focus:ring-neon-pink outline-none" type="text" value={newRuleTitle} onChange={e => setNewRuleTitle(e.target.value)} placeholder='> rule ?' />
+                          </div>
+                          <div className="flex flex-wrap justify-center gap-3 w-full">
+                            <button className="flex-1 min-w-30 px-4 py-2 border border-neon-green/50 text-neon-green font-mono text-xs uppercase hover:bg-neon-green/10 transition-colors shadow-[0_0_10px_rgba(0,255,157,0.2)] hover:shadow-[0_0_15px_rgba(0,255,157,0.4)]"
+                              onClick={() => {
+                                createRule(newRuleTitle)
+
+                                setRuleAddPrompt(false);
+                              }}
+                            >INSERT_CHANGES</button>
+
+                            <button className="flex-1 min-w-30 px-4 py-2 border border-slate-600 text-slate-400 font-mono text-xs uppercase hover:bg-slate-800 transition-colors"
+                              onClick={() => {
+                                setRuleAddPrompt(false);
+                              }}
+                            >DISCARD_DATA</button>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* organizers  */}
+                    <div className="col-span-1 md:col-span-5 glass-panel border neon-border-cyan rounded-xl p-6 relative overflow-hidden group flex flex-col">
+                      <OrganizerDeck />
+
+                    </div>
+
+                    {/* admin control */}
+                    <div className="col-span-1 md:col-span-7 glass-panel border neon-border-pink rounded-xl p-6 relative overflow-hidden group flex flex-col" hidden={!(userType == 'root')}>
+                      <AdminController />
+                    </div>
+
+                  </div>
+
+                  {/* \admin */}
+
+
+                  <div className="max-w-7xl mx-auto space-y-6 pt-6" hidden={!(userType === 'root')}>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+
+                      <div className="glass-panel neon-border-cyan rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-cyan font-mono text-xs uppercase tracking-wider">Total Users</span>
+                          <span className="material-symbols-outlined text-neon-cyan/50">group</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(0,243,255,0.5)]">{matrix ? (matrix.users_email).length : 0}</div>
+                        <div className="mt-2 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-neon-cyan w-[65%] animate-pulse"></div>
+                        </div>
+                      </div>
+
+
+                      <div className="glass-panel neon-border-green rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-green font-mono text-xs uppercase tracking-wider">Participants</span>
+                          <span className="px-1.5 py-0.5 bg-neon-green/20 text-neon-green text-[10px] font-bold rounded border border-neon-green/30">VERIFIED</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(0,255,157,0.5)]">{matrix ? (matrix.team_count) : 0}</div>
+                        <div className="mt-2 text-xs font-mono text-slate-400">
+                          {/* <span className="text-neon-green">+12%</span> vs last hour */}
+                        </div>
+                      </div>
+
+
+                      <div className="glass-panel neon-border-yellow rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-yellow font-mono text-xs uppercase tracking-wider">Revenue</span>
+                          <span className="material-symbols-outlined text-neon-yellow/50">payments</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(255,238,0,0.5)]">₹--,--</div>
+                        <div className="mt-2 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+                          <div className="h-full bg-neon-yellow w-[0%]"></div>
+                        </div>
+                      </div>
+
+
+                      <div className="glass-panel neon-border-pink rounded-xl p-5 relative overflow-hidden group">
+                        <div className="scan-line-anim opacity-10"></div>
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="text-neon-pink font-mono text-xs uppercase tracking-wider">Sys_Latency</span>
+                          <span className="material-symbols-outlined text-neon-pink/50 animate-spin-slow">settings_ethernet</span>
+                        </div>
+                        <div className="text-4xl font-display font-bold text-white drop-shadow-[0_0_8px_rgba(255,0,85,0.5)]">12ms</div>
+                        <div className="mt-2 text-xs font-mono text-neon-cyan">OPTIMAL_PERFORMANCE</div>
+                      </div>
+
+
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                      <DepartmentMatrix />
+                      <div className="col-span-1 lg:col-span-4 space-y-6">
+                        <Radar />
+                        <CommandCenter />
                       </div>
                     </div>
 
 
                   </div>
+
+                  {/* footer sec */}
+                  <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
+                    <span>SYSTEM_ID: <span className="text-slate-400">NODE_001_ALPHA</span></span>
+                    <div className="flex gap-4">
+                      <a className="hover:text-neon-cyan transition-colors" href="https://innovatearena.vercel.app/terms">TERMS_OF_SERVICE</a>
+                      <a className="hover:text-neon-pink transition-colors" href="https://innovatearena.vercel.app/privecy">PRIVACY_PROTOCOL</a>
+                      <a className="hover:text-neon-yellow transition-colors" href="#">SUPPORT_CHANNEL</a>
+                    </div>
+                  </div>
                 </div>
+
+
+
               </main>
             </div>
 
