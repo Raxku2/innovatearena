@@ -15,7 +15,8 @@ const useEventDetailsStore = create((set) => ({
   eventOrganizers: [],
   rules: [],
   matrix: null,
-  admins:[],
+  admins: [],
+  invoice: null,
 
 
 
@@ -27,6 +28,7 @@ const useEventDetailsStore = create((set) => ({
   setEventSchedules: (params) => set({ schedules: params }),
   setMatrix: (params) => set({ matrix: params }),
   setAdmins: (params) => set({ admins: params }),
+  setInvoice: (params) => set({ invoice: params }),
 
 }))
 

@@ -380,7 +380,7 @@ export default function Landing() {
                                     <span className="text-glow-cyan">System_Metrics</span>
                                 </h2>
                                 <div className="relative p-8 border border-(--neon-cyan)/40 rounded-xl bg-black/80 backdrop-blur-sm shadow-[0_0_30px_rgba(0,243,255,0.1)]">
-                                    <div className="absolute top-0 right-0 p-2 text-[10px] text-(--neon-cyan) font-mono opacity-80 border-l border-b border-(--neon-cyan)/40 bg-(--neon-cyan)/10">SYS_ANALYSIS_V.2.0</div>
+                                    <div className="absolute top-0 right-0 p-2 text-[10px] text-(--neon-cyan) font-mono opacity-80 border-l border-b border-(--neon-cyan)/40 bg-(--neon-cyan)/10">SYS_ANALYSIS_V.{__APP_VERSION__}</div>
                                     <div className="absolute -right-4 -top-4 w-24 h-24 border-2 border-(--neon-cyan)/20 rounded-full flex items-center justify-center animate-spin-slow pointer-events-none">
                                         <div className="w-full h-px bg-(--neon-cyan)/20"></div>
                                         <div className="absolute h-full w-1 bg-(--neon-cyan)/20"></div>
