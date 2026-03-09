@@ -24,7 +24,7 @@ const useUserDataIO = () => {
     const { currentdepartment } = useDepartmentSelector();
     const { year } = useYearSelector();
 
-    const { disableLoadingBar, enableLoadingBar, setAdmins } = useEventDetailsStore();
+    const { disableLoadingBar, enableLoadingBar, setAdmins, setInvoice } = useEventDetailsStore();
 
 
     const { setUserToLocalStorage, getUserFromLocalStorage } = useUserAuthHook();
@@ -118,7 +118,6 @@ const useUserDataIO = () => {
             console.error("Profile fetch failed:", error);
         }
     }
-
 
 
     const updateUserInfo = async () => {
@@ -465,7 +464,6 @@ const useUserDataIO = () => {
     }
 
 
-
     const deleteSchedule = async (sch_id) => {
         if (userType != 'root') {
             return
@@ -509,6 +507,8 @@ const useUserDataIO = () => {
 
 
     }
+
+
     // rule
     const createRule = async (title) => {
         if (userType != 'root') {
@@ -704,6 +704,7 @@ const useUserDataIO = () => {
 
     }
 
+
     const updateOrganizer = async (name, id, dp, role) => {
         if (userType != 'root') {
             return
@@ -823,6 +824,7 @@ const useUserDataIO = () => {
             disableLoadingBar()
         }
     }
+
 
     const updateAdminInfo = async (id, params) => {
         if (userType != 'root') {

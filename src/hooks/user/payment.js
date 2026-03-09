@@ -1,15 +1,20 @@
+import React from 'react';
 import { useCallback } from "react";
 import { useEventDetailsStore, useUserDetailsStore } from "../../stores";
 import { useUserDataIO } from "./user";
+import { usePdfDownload } from './invoice';
 
 const useInnovateArenaPayment = () => {
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
     const REDION = import.meta.env.VITE_REDION;
     const RAZOR_KEY = import.meta.env.VITE_RAZOR_KEY;
 
-    const { disableLoadingBar, enableLoadingBar, setAppStatus } = useEventDetailsStore();
-    const { userId, userName, email, phone, team_id } = useUserDetailsStore();
+    const { disableLoadingBar, enableLoadingBar, setAppStatus, setInvoice } = useEventDetailsStore();
+    const { userId, userName, email, phone, team_id, txnId } = useUserDetailsStore();
     const { getFullUserInfo } = useUserDataIO();
+    const { downloadPdf } = usePdfDownload();
+
+
 
     const startRegistrationPayment = useCallback(async () => {
         return
@@ -162,9 +167,43 @@ const useInnovateArenaPayment = () => {
         }
     }
 
+    const getInvoice = async () => {
+        setAppStatus("initiating...")
+        // enableLoadingBar();
+        try {
+            const res = await fetch(BACKEND_API + `/pay/invoice/${team_id}?pay_id=${txnId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (res.status == 200) {
+                const data = await res.json();
+                // console.log(data);
+                setInvoice(data);
+                setAppStatus("Please wait, it's take some time")
+                await downloadPdf(data, 'InnovateArena_Invoice.pdf');
+                setAppStatus("INVOICE READY")
+                disableLoadingBar()
+            } else if (res.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(res.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+        } catch (error) {
+            setAppStatus("try again")
+            console.error("Profile fetch failed:", error);
+            disableLoadingBar()
+        }
+
+    }
 
 
-    return { startRegistrationPayment, goForPayment };
+    return { startRegistrationPayment, goForPayment, getInvoice };
 };
 
 export default useInnovateArenaPayment;

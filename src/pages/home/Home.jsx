@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Landing from './Landing'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores'
-import { AdminController, CommandCenter, DateCounter, DepartmentMatrix, Navbar1, OrganizerDeck, Radar, RuleCard, ScheduleCard } from '../../component';
+import { AdminController, CommandCenter, DateCounter, DepartmentMatrix, Invoice, Navbar1, OrganizerDeck, Radar, RuleCard, ScheduleCard } from '../../component';
 import clsx from 'clsx';
 import { useAdminControls, useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
 import { useNavigate } from 'react-router'
@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from 'motion/react'
 
 export default function Home() {
   // hooks
-  const { goForPayment } = useInnovateArenaPayment();
+  const { goForPayment, getInvoice } = useInnovateArenaPayment();
   const navigate = useNavigate();
   const { removeUser } = useUserAuthHook();
   const { giveRecods } = useAdminControls();
@@ -208,7 +208,7 @@ export default function Home() {
                           <span className="material-symbols-outlined text-(--neon-cyan) text-3xl animate-pulse">terminal</span>
                           <div className="flex flex-col">
                             <span className="font-display font-bold text-white tracking-wider text-sm">INNOVATE<span className="text-(--neon-cyan)">ARENA</span></span>
-                            <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V0.3</span>
+                            <span className="text-[9px] font-mono text-slate-500 tracking-[0.2em]">DASHBOARD_V{__APP_VERSION__}</span>
                           </div>
                         </div>
                       </div>
@@ -637,8 +637,12 @@ export default function Home() {
 
                       <button className="w-full relative overflow-hidden group py-3 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-display font-bold uppercase tracking-wider transition-all backdrop-blur-sm"
 
-                        // hidden={!peymentStatus}
-                        hidden
+                        hidden={!peymentStatus}
+                        // hidden
+                        onClick={() => {
+                          enableLoadingBar();
+                          getInvoice();
+                        }}
                       >
                         <span className="relative z-10 flex items-center justify-center gap-2 text-xs">
                           <span className="material-symbols-outlined text-sm">download</span> DOWNLOAD_INVOICE
@@ -891,6 +895,7 @@ export default function Home() {
 
                   </div>
 
+                  {/* <Invoice /> */}
                   {/* footer sec */}
                   <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
                     <span>SYSTEM_ID: <span className="text-slate-400">NODE_001_ALPHA</span></span>
@@ -905,6 +910,8 @@ export default function Home() {
 
 
               </main>
+
+
             </div>
 
           </div >
