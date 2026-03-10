@@ -11,12 +11,7 @@ export default function RefundPolicy() {
     return (
         <main className="flex-1 relative">
 
-
-
-
             <header className="fixed top-0 left-0 right-0 z-50 glass-terminal border-b border-neon-cyan/20">
-
-
                 <div className="layout-container flex h-20 items-center justify-between px-6 lg:px-12 max-w-7xl mx-auto w-full">
                     <div className="flex items-center gap-4 text-white group cursor-pointer">
                         <div className="text-neon-pink relative">
@@ -24,21 +19,16 @@ export default function RefundPolicy() {
                             <div className="absolute inset-0 bg-neon-pink blur-md opacity-40"></div>
                         </div>
 
-
                         <div className="flex flex-col">
                             <h2 className="text-white text-xl font-display font-bold tracking-widest uppercase">INNOVATE<span className="text-neon-pink">Are</span><span className="text-neon-cyan">na</span></h2>
                             <span className="text-[10px] font-mono text-neon-green tracking-[0.3em]">&gt; SYSTEM_ONLINE</span>
                         </div>
                     </div>
                     <nav className="hidden md:flex items-center gap-8 font-mono text-xs tracking-widest">
-
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/">// HOME</Link>
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/terms">// TERMS</Link>
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/privecy">// PRIVECY</Link>
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/refund">// REFUND</Link>
-
-
-
                     </nav>
                     <div className="flex items-center gap-4">
                         <button className="hidden sm:flex items-center justify-center overflow-hidden bg-black/50 hover:bg-neon-cyan/10 border border-neon-cyan text-neon-cyan h-10 px-8 text-sm font-display font-bold uppercase tracking-wider transition-all box-glow-cyan hover:scale-105 clip-path-polygon"
@@ -54,11 +44,7 @@ export default function RefundPolicy() {
                 </div>
             </header>
 
-
-
-
             <header className="min-h-[60vh] flex flex-col justify-center items-start px-8 md:px-20 relative overflow-hidden border-b border-slate-800 mt-[10%]">
-
                 <div className="absolute inset-0 bg-linear-to-b from-transparent to-background-deep z-0 noise-bg"></div>
                 <div className="absolute top-0 right-0 w-150 h-150 bg-neon-pink/5 rounded-full blur-[150px] pointer-events-none"></div>
                 <div className="relative z-10 w-full max-w-5xl">
@@ -67,29 +53,25 @@ export default function RefundPolicy() {
                         <span className="font-mono text-neon-pink text-xs tracking-widest animate-pulse">// FINANCIAL_LAYER</span>
                     </div>
                     <h1 className="kinetic-title font-display font-black text-5xl md:text-7xl lg:text-8xl tracking-tighter text-white leading-[0.9] mb-8 wrap-break-word uppercase">
-                        REFUND_PROTOCOL<br /><span className="text-transparent bg-clip-text bg-linear-to-r from-neon-pink to-neon-cyan">V0.1</span>
+                        REFUND_PROTOCOL<br /><span className="text-transparent bg-clip-text bg-linear-to-r from-neon-pink to-neon-cyan">V0.2</span>
                     </h1>
 
                     <div className="flex flex-col md:flex-row md:items-center justify-between border-t border-slate-700 pt-6 w-full">
                         <div className="flex flex-col mb-4 md:mb-0">
                             <span className="text-xs font-mono text-slate-500 mb-1">CURRENT_STATUS</span>
-
                             <span className="text-neon-cyan font-mono text-sm tracking-wider flex items-center gap-2">
                                 <span className="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></span>
                                 PUBLIC_ENFORCEMENT
                             </span>
                         </div>
-                        
+
                         <div className="flex flex-col text-right">
                             <span className="text-xs font-mono text-slate-500 mb-1">LAST_UPDATE</span>
-                            <span className="text-white font-mono text-sm tracking-wider">MARCH_03_2026 // 14:00:00 IST</span>
+                            <span className="text-white font-mono text-sm tracking-wider">MARCH_10_2026 // 12:00:00 IST</span>
                         </div>
                     </div>
                 </div>
             </header>
-
-
-
 
             <div className="px-6 md:px-20 py-20 space-y-32 max-w-5xl mx-auto">
                 <section className="relative group" id="NO_REFUND">
@@ -121,6 +103,7 @@ export default function RefundPolicy() {
                         </div>
                     </div>
                 </section>
+
                 <section className="relative group" id="CORRECTION">
                     <div className="absolute -right-4 -top-4 text-8xl font-display font-black text-slate-800/20 -z-10 group-hover:text-neon-cyan/10 transition-colors">02</div>
                     <div className="border border-slate-700 bg-surface-hacker p-8 md:p-12 relative overflow-hidden">
@@ -145,16 +128,24 @@ export default function RefundPolicy() {
                                     </h3>
                                     <p className="text-slate-500 text-xs">Allow 15-30 minutes for the asynchronous reconciliation bot to retry the handshake.</p>
                                 </div>
-                                <div className="border border-slate-700 bg-black/50 p-6 hover:border-neon-cyan transition-colors group/card">
-                                    <h3 className="text-neon-cyan font-bold mb-4 flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-sm">mail</span> Step 02: SIGNAL
-                                    </h3>
-                                    <p className="text-slate-500 text-xs">If status persists, transmit proof of payment (Transaction ID) to our support node immediately.</p>
+                                <div className="border border-slate-700 bg-black/50 p-6 hover:border-neon-cyan transition-colors group/card flex flex-col justify-between">
+                                    <div>
+                                        <h3 className="text-neon-cyan font-bold mb-4 flex items-center gap-2">
+                                            <span className="material-symbols-outlined text-sm">mail</span> Step 02: SIGNAL
+                                        </h3>
+                                        <p className="text-slate-500 text-xs mb-4">If status persists, transmit proof of payment (Transaction ID) to our support node immediately.</p>
+                                    </div>
+                                    <div className="bg-red-500/10 border border-red-500/30 p-3 rounded-sm">
+                                        <p className="text-red-400 font-mono text-[10px] uppercase leading-tight">
+                                            <span className="font-bold">[!] INVALID_PROOF:</span> Screenshots of "Payment Success" lacking a visible Transaction ID, UTR, or bank reference number are strictly unacceptable and will be rejected.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+
                 <section className="relative" id="AUTO_REFUND">
                     <div className="absolute inset-0 bg-neon-yellow/5 blur-[100px] -z-10"></div>
                     <div className="border-2 border-neon-yellow bg-black/80 p-1 shadow-[0_0_50px_rgba(255,238,0,0.15)] relative overflow-hidden">
@@ -187,6 +178,7 @@ export default function RefundPolicy() {
                         </div>
                     </div>
                 </section>
+
                 <section className="relative group" id="EVENT_CANCELLATION">
                     <div className="hacker-grid border border-slate-700 bg-black/80 p-8 md:p-12 relative overflow-hidden">
                         <h2 className="font-display font-bold text-2xl md:text-3xl text-white mb-6 flex items-center gap-4 relative z-10">
@@ -209,12 +201,8 @@ export default function RefundPolicy() {
                     </div>
                 </section>
 
-                
                 <section className="relative py-12 " id="CONTACT">
                     <div className="architects-card p-8 bg-white md:p-12 shadow-[10px_10px_0px_#00f3ff] relative transform hover:-translate-y-1 transition-transform">
-
-                        {/* <div className="absolute top-4 right-4 font-mono font-bold text-xs bg-black text-white px-2 py-1">Direct_Link</div> */}
-
                         <h2 className="font-display font-black text-4xl mb-8 uppercase tracking-tighter">
                             05. Contact<br />Uplink
                         </h2>
@@ -222,10 +210,11 @@ export default function RefundPolicy() {
                             <div>
                                 <p className="font-bold mb-1">OFFICIAL_CHANNEL</p>
                                 <a className="text-blue-600 hover:underline text-lg" href="mailto:yantrayodha+support@gmail.com">yantrayodha+support@gmail.com</a>
+                                <p className="text-xs text-gray-500 mt-1">All disputes and payment proofs must be routed here. Do NOT directly contact individual organizers.</p>
                             </div>
                             <div>
                                 <p className="font-bold mb-1">EMERGENCY_VOICE_LINE</p>
-                                <p className="text-lg">+91 76792 83874 <span className="text-xs text-gray-500 ml-2">(1000 - 1800 IST)</span></p>
+                                <p className="text-lg">+91 76792 83874 <span className="text-xs text-gray-500 ml-2">(Mon-Fri, 1000 - 2000 IST)</span></p>
                             </div>
                             <div className="md:col-span-2 pt-6 border-t-2 border-black">
                                 <p className="font-bold mb-2">PHYSICAL_NODE</p>
@@ -234,10 +223,11 @@ export default function RefundPolicy() {
                         </div>
                     </div>
                 </section>
+
                 <footer className="mt-20 pt-10 border-t border-slate-800 text-center pb-10">
                     <p className="font-mono text-xs text-slate-600 uppercase">
                         © 2026 pinaka . ALL RIGHTS RESERVED. <br />
-                        SYSTEM_ID: LEGAL_DOC_V0.1
+                        SYSTEM_ID: FINANCIAL_DOC_V0.2
                     </p>
                 </footer>
             </div>

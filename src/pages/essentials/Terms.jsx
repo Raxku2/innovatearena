@@ -24,14 +24,10 @@ export default function Terms() {
                         </div>
                     </div>
                     <nav className="hidden md:flex items-center gap-8 font-mono text-xs tracking-widest">
-
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/">// HOME</Link>
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/terms">// TERMS</Link>
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/privecy">// PRIVECY</Link>
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/refund">// REFUND</Link>
-
-
-
                     </nav>
                     <div className="flex items-center gap-4">
                         <button className="hidden sm:flex items-center justify-center overflow-hidden bg-black/50 hover:bg-neon-cyan/10 border border-neon-cyan text-neon-cyan h-10 px-8 text-sm font-display font-bold uppercase tracking-wider transition-all box-glow-cyan hover:scale-105 clip-path-polygon"
@@ -49,7 +45,6 @@ export default function Terms() {
 
             <header className="min-h-[60vh] flex flex-col justify-center items-start px-8 md:px-20 relative overflow-hidden border-b border-slate-800 mt-[10%]">
 
-                
                 <div className="absolute inset-0 bg-linear-to-b from-transparent to-background-deep z-0"></div>
                 <div className="absolute top-0 right-0 w-150 h-150 bg-neon-cyan/5 rounded-full blur-[150px] pointer-events-none"></div>
                 <div className="relative z-10 w-full max-w-5xl">
@@ -67,12 +62,14 @@ export default function Terms() {
                         </div>
                         <div className="flex flex-col text-right">
                             <span className="text-xs font-mono text-slate-500 mb-1">LAST_UPDATE</span>
-                            <span className="text-white font-mono text-sm tracking-wider">MARCH_03_2026 // 14:00:00 IST</span>
+                            <span className="text-white font-mono text-sm tracking-wider">MARCH_10_2026 // 12:00:00 IST</span>
                         </div>
                     </div>
                 </div>
             </header>
             <div className="px-6 md:px-20 py-20 space-y-32 max-w-6xl mx-auto">
+
+                {/* SECTION 01: ELIGIBILITY */}
                 <section className="relative group" id="ELIGIBILITY">
                     <div className="absolute -left-4 -top-4 text-8xl font-display font-black text-slate-800/20 -z-10 group-hover:text-neon-cyan/10 transition-colors">01</div>
                     <div className="glass-panel neon-border-cyan rounded-none p-1 md:p-1">
@@ -103,6 +100,8 @@ export default function Terms() {
                         </div>
                     </div>
                 </section>
+
+                {/* SECTION 02: PAYMENTS */}
                 <section className="relative group" id="PAYMENTS">
                     <div className="absolute -right-4 -top-4 text-8xl font-display font-black text-slate-800/20 -z-10 group-hover:text-neon-pink/10 transition-colors">02</div>
                     <div className="glass-panel neon-border-pink rounded-xl p-8 md:p-12 relative overflow-hidden">
@@ -122,13 +121,15 @@ export default function Terms() {
                                     <p className="text-xs text-slate-400">UPI, Credit/Debit Cards, NetBanking. Crypto-assets are currently not supported by the central bank firewall.</p>
                                 </div>
                                 <div className="border border-slate-700 p-4 bg-slate-900/50">
-                                    <h4 className="text-neon-pink font-bold mb-2">CURRENCY_STD</h4>
-                                    <p className="text-xs text-slate-400">All transactions are processed in INR (Indian Rupees). International participants must handle FX fees.</p>
+                                    <h4 className="text-neon-pink font-bold mb-2">MERCHANT_INTERACTION</h4>
+                                    <p className="text-xs text-slate-400">Contact the payment merchant ONLY for critical failures (failed processing, lost tokens, or errors). Queries regarding successful status or refunds will not be accepted.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
+
+                {/* SECTION 03: REFUNDS */}
                 <section className="relative" id="REFUND_POLICY">
                     <div className="absolute inset-0 bg-neon-yellow/5 blur-[100px] -z-10"></div>
                     <div className="border-2 border-neon-yellow bg-black/80 p-1 shadow-[0_0_50px_rgba(255,238,0,0.15)] relative overflow-hidden">
@@ -142,7 +143,7 @@ export default function Terms() {
                             </div>
                             <div className="font-body text-slate-200 space-y-6 text-lg">
                                 <p className="border-l-4 border-neon-yellow pl-6 py-2 bg-neon-yellow/5">
-                                    <strong className="text-white">Strict No-Refund Policy:</strong> Once the registration sequence is initiated and payment is confirmed, no refunds will be issued under standard operating conditions.
+                                    <strong className="text-white">Strict No-Refund Policy:</strong> Once the registration sequence is initiated and payment is confirmed, no refunds will be issued under standard operating conditions. Registration cancellations are not accepted.
                                 </p>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
                                     <div>
@@ -162,50 +163,107 @@ export default function Terms() {
                         </div>
                     </div>
                 </section>
+
+                {/* SECTION 04: IMMUTABILITY (NEW) */}
+                <section className="relative group" id="DATA_IMMUTABILITY">
+                    <div className="absolute -left-4 -top-4 text-8xl font-display font-black text-slate-800/20 -z-10 group-hover:text-purple-500/10 transition-colors">04</div>
+                    <div className="border border-purple-500/50 bg-black/40 p-8 md:p-12 relative overflow-hidden">
+                        <h2 className="font-display font-bold text-3xl text-white mb-8 flex items-center gap-4">
+                            <span className="text-purple-400">04.</span> DATA_IMMUTABILITY
+                        </h2>
+                        <div className="font-mono text-sm md:text-base text-slate-300 space-y-6 leading-relaxed">
+                            <p>
+                                Post-transaction, all registration payloads enter a strict <span className="text-white font-bold">READ-ONLY</span> state.
+                            </p>
+                            <ul className="list-none space-y-4 mt-4 pl-4 border-l border-slate-700">
+                                <li className="flex items-start gap-3">
+                                    <span className="material-symbols-outlined text-purple-400 text-sm mt-1">lock</span>
+                                    <span><strong>Team Roster Lock:</strong> No team members can be added, removed, or swapped after registration is complete.</span>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="material-symbols-outlined text-purple-400 text-sm mt-1">badge</span>
+                                    <span><strong>Certificate Identity:</strong> Your final event certificate will be generated using the exact display name fetched from your Google Auth (Gmail) account during login. If your account uses a nickname or "fancy" name, that string will be hardcoded onto your certificate. We will provide zero manual modifications or re-issues.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                {/* SECTION 05: PROTOCOLS / CONDUCT */}
                 <section className="relative group" id="CODE_OF_CONDUCT">
                     <div className="hacker-grid border border-slate-700 bg-black/80 p-8 md:p-12 relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-bl from-neon-green/20 to-transparent pointer-events-none"></div>
                         <h2 className="font-display font-bold text-3xl text-white mb-8 flex items-center gap-4 relative z-10">
-                            <span className="text-neon-green">04.</span> THE_PROTOCOLS
+                            <span className="text-neon-green">05.</span> THE_PROTOCOLS
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 relative z-10 font-mono text-sm">
                             <div className="space-y-4">
+                                <h3 className="text-white border-b border-slate-700 pb-2">SUB_ROUTINE: TEMPORAL_STRICTNESS</h3>
+                                <p className="text-slate-400">Event timelines are absolute. Late arrivals will not receive a single nanosecond of time extension for the competition. Tardiness may result in denied entry.</p>
+                            </div>
+                            <div className="space-y-4">
+                                <h3 className="text-white border-b border-slate-700 pb-2">SUB_ROUTINE: ZERO_TOLERANCE</h3>
+                                <p className="text-slate-400">Any attempt to exploit system loopholes, bypass event rules, or create chaos will trigger immediate SIGKILL (direct elimination). By participating, you explicitly waive any right to object to termination under these conditions.</p>
+                            </div>
+                            <div className="space-y-4">
                                 <h3 className="text-white border-b border-slate-700 pb-2">SUB_ROUTINE: BEHAVIOR</h3>
                                 <p className="text-slate-400">Harassment includes offensive verbal comments related to gender, sexual orientation, disability, physical appearance, body size, race, or religion.</p>
-                                <p className="text-slate-400">Participants asked to stop any harassing behavior are expected to comply immediately or face immediate disconnection.</p>
                             </div>
                             <div className="space-y-4">
                                 <h3 className="text-white border-b border-slate-700 pb-2">SUB_ROUTINE: INTELLECTUAL_PROPERTY</h3>
                                 <p className="text-slate-400">All code committed during the hackathon must be original. Plagiarism detectors are active on all submission repositories.</p>
-                                <p className="text-slate-400">Open source libraries are permitted, provided they are declared in the project manifest.</p>
                             </div>
                         </div>
                     </div>
                 </section>
+
+                {/* SECTION 06: COMMAND STRUCTURE (NEW) */}
+                <section className="relative group" id="COMMAND_STRUCTURE">
+                    <div className="border border-orange-500/50 bg-black/40 p-8 md:p-12 relative overflow-hidden">
+                        <h2 className="font-display font-bold text-3xl text-white mb-8 flex items-center gap-4">
+                            <span className="text-orange-400">06.</span> COMMAND_&_SUPPORT
+                        </h2>
+                        <div className="font-mono text-sm md:text-base text-slate-300 space-y-6 leading-relaxed">
+                            <p>
+                                All on-site Organizers and Coordinators operate strictly under the directives of the <strong>Yantrayodha Club</strong> and the <strong>GOAT Community</strong>.
+                            </p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <div className="bg-slate-900/50 p-4 border-l-2 border-orange-500">
+                                    <h4 className="text-orange-400 font-bold mb-2">SUPPORT_WINDOW</h4>
+                                    <p className="text-xs text-slate-400">Queries are accepted from the registration open date until the event conduct date. <br /><br /><strong>Uptime:</strong> Monday to Friday | 10:00 to 20:00 IST.<br /><strong>Downtime:</strong> Saturdays & Sundays.</p>
+                                </div>
+                                <div className="bg-slate-900/50 p-4 border-l-2 border-orange-500">
+                                    <h4 className="text-orange-400 font-bold mb-2">DISPUTE_RESOLUTION</h4>
+                                    <p className="text-xs text-slate-400">Do NOT argue, fight, or directly contact individual organizers for opinions or grievances. All queries must be routed exclusively through the official Yantrayodha Club support email.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                {/* SECTION 07: SHIPPING */}
                 <section className="opacity-50 hover:opacity-100 transition-opacity" id="SHIPPING">
                     <div className="border-l border-slate-800 pl-6 py-2">
-                        <h3 className="font-mono text-slate-500 text-sm mb-2">05. SHIPPING_POLICY</h3>
+                        <h3 className="font-mono text-slate-500 text-sm mb-2">07. SHIPPING_POLICY</h3>
                         <p className="text-xs font-mono text-slate-600">NOT_APPLICABLE for digital goods/services. Swag kits (if applicable) are collected on-site.</p>
                     </div>
                 </section>
 
-
+                {/* SECTION 08: CONTACT */}
                 <section className="relative py-12 " id="CONTACT">
                     <div className="architects-card p-8 bg-white md:p-12 shadow-[10px_10px_0px_#00f3ff] relative transform hover:-translate-y-1 transition-transform">
-
-                        {/* <div className="absolute top-4 right-4 font-mono font-bold text-xs bg-black text-white px-2 py-1">Direct_Link</div> */}
-
                         <h2 className="font-display font-black text-4xl mb-8 uppercase tracking-tighter">
-                            06. Contact<br />Uplink
+                            08. Contact<br />Uplink
                         </h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 font-mono text-sm">
                             <div>
                                 <p className="font-bold mb-1">OFFICIAL_CHANNEL</p>
                                 <a className="text-blue-600 hover:underline text-lg" href="mailto:yantrayodha+support@gmail.com">yantrayodha+support@gmail.com</a>
+                                <p className="text-xs text-gray-500 mt-1">Use this node for all queries, opinions, and disputes.</p>
                             </div>
                             <div>
                                 <p className="font-bold mb-1">EMERGENCY_VOICE_LINE</p>
-                                <p className="text-lg">+91 76792 83874 <span className="text-xs text-gray-500 ml-2">(1000 - 1800 IST)</span></p>
+                                <p className="text-lg">+91 76792 83874 <span className="text-xs text-gray-500 ml-2">(Mon-Fri, 1000 - 2000 IST)</span></p>
                             </div>
                             <div className="md:col-span-2 pt-6 border-t-2 border-black">
                                 <p className="font-bold mb-2">PHYSICAL_NODE</p>
@@ -214,10 +272,11 @@ export default function Terms() {
                         </div>
                     </div>
                 </section>
+
                 <footer className="mt-20 pt-10 border-t border-slate-800 text-center pb-10">
                     <p className="font-mono text-xs text-slate-600 uppercase">
                         © 2026 pinaka . ALL RIGHTS RESERVED. <br />
-                        SYSTEM_ID: LEGAL_DOC_V0.1
+                        SYSTEM_ID: LEGAL_DOC_V0.2
                     </p>
                 </footer>
             </div>
