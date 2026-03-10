@@ -1,12 +1,15 @@
 import React from 'react'
 import { Navbar1, Navbar2 } from '../../component';
-import { useEventDetailsStore } from '../../stores';
+import { useEventDetailsStore, useUserDetailsStore } from '../../stores';
 import { useGoogleAuth } from '../../hooks';
 import { Link } from 'react-router';
 
 export default function Terms() {
     const { login } = useGoogleAuth();
     const { enableLoadingBar } = useEventDetailsStore();
+    const {
+        dp, userName, userType,
+    } = useUserDetailsStore();
     return (
         <main className="flex-1 relative">
 
@@ -29,7 +32,22 @@ export default function Terms() {
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/privecy">// PRIVECY</Link>
                         <Link className="text-slate-400 hover:text-neon-yellow hover:text-glow-yellow transition-all duration-300 uppercase" to="/refund">// REFUND</Link>
                     </nav>
-                    <div className="flex items-center gap-4">
+
+
+
+                    <div className="w-10 h-10 rounded-full border border-(--neon-cyan)/50 p-0.5 relative group cursor-pointer flex justify-center items-center" hidden={userType == ''}>
+                        <img
+                            alt={userName ? userName[0] : "U"}
+                            src={dp}
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0 transition-all"
+                            onError={(e) => {
+                                e.target.src = `https://ui-avatars.com/api/?name=${userName || 'User'}&background=000000&color=fff`;
+                            }}
+                        />
+                        <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-(--neon-green) border border-black rounded-full"></div>
+                    </div>
+                    <div className="flex items-center gap-4" hidden={userType != ''}>
                         <button className="hidden sm:flex items-center justify-center overflow-hidden bg-black/50 hover:bg-neon-cyan/10 border border-neon-cyan text-neon-cyan h-10 px-8 text-sm font-display font-bold uppercase tracking-wider transition-all box-glow-cyan hover:scale-105 clip-path-polygon"
                             onClick={() => {
                                 enableLoadingBar();
