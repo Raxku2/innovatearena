@@ -6,12 +6,13 @@ export default function AttendenceCard() {
     const {
         attendence_process_status,
         project_submit_process_status,
+        peymentStatus, registrationStatus,
     } = useEventDetailsStore();
     const { attendence, setAttendence } = useUserDetailsStore();
     const { markAttend } = useUserDataIO();
 
     return (
-        <div className="col-span-1 md:col-span-7 glass-panel border-t-2 border-neon-green rounded-xl p-6 relative group hover:bg-neon-green/5 transition-colors duration-500" hidden={!attendence_process_status}  >
+        <div className="col-span-1 md:col-span-7 glass-panel border-t-2 border-neon-green rounded-xl p-6 relative group hover:bg-neon-green/5 transition-colors duration-500" hidden={!(attendence_process_status && registrationStatus && peymentStatus)}  >
             <div className="absolute top-2 right-2 text-neon-green/20 group-hover:text-neon-green/50 transition-colors">
                 <span className="material-symbols-outlined text-4xl">how_to_reg</span>
             </div>

@@ -15,6 +15,7 @@ export default function ProjectSubmit() {
         project_id, attendence,
         setProjectTitle,
         setProjectDeployment,
+        peymentStatus, registrationStatus,
         setProjectRepo
     } = useUserDetailsStore();
 
@@ -22,7 +23,7 @@ export default function ProjectSubmit() {
 
 
     return (
-        <div className="col-span-1 md:col-span-5 glass-panel neon-border-cyan rounded-xl p-6 relative group" hidden={!(project_submit_process_status && attendence)} >
+        <div className="col-span-1 md:col-span-5 glass-panel neon-border-cyan rounded-xl p-6 relative group" hidden={!(project_submit_process_status && attendence && registrationStatus && peymentStatus)} >
             <div className="absolute top-2 right-2 text-neon-cyan/20">
                 <span className="material-symbols-outlined text-4xl">cloud_upload</span>
             </div>
