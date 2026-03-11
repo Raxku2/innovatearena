@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Landing from './Landing'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores'
-import { AdminController, CommandCenter, DateCounter, DepartmentMatrix, Invoice, Navbar1, OrganizerDeck, Radar, RuleCard, ScheduleCard } from '../../component';
+import { AdminController, AttendenceCard, CommandCenter, DateCounter, DepartmentMatrix, Invoice, Navbar1, OrganizerDeck, ProjectSubmit, Radar, RuleCard, ScheduleCard } from '../../component';
 import clsx from 'clsx';
 import { useAdminControls, useDepartmentSelector, useInnovateArenaPayment, useUserAuthHook, useUserDataIO, useYearSelector } from '../../hooks';
 import { useNavigate } from 'react-router'
@@ -37,7 +37,10 @@ export default function Home() {
     AppStatus,
     rules,
     schedules,
-    matrix
+    matrix,
+    registration_process_status,
+    attendence_process_status,
+    project_submit_process_status,
   } = useEventDetailsStore();
 
 
@@ -106,6 +109,9 @@ export default function Home() {
 
     const reg = registrationStatus;
     const pay = peymentStatus;
+
+
+    
 
     if (!reg && !pay) {
       setRegCardStatus(0);
@@ -422,31 +428,32 @@ export default function Home() {
 
                       </div>
 
+                      <div hidden={!registration_process_status}>
+                        <button
+                          className="mt-6 w-full py-2 border border-slate-700 hover:border-neon-cyan text-slate-400 hover:text-neon-cyan text-xs font-mono uppercase transition-all flex items-center justify-center gap-2"
+                          onClick={() => {
+                            setUserFormedit(true);
+                          }}
+                          hidden={!modification || userFormedit}
+                        >
+                          <span className="material-symbols-outlined text-sm">edit</span>
+                          ENABLE_DATA_MODIFICATION
+                        </button>
 
-                      <button
-                        className="mt-6 w-full py-2 border border-slate-700 hover:border-neon-cyan text-slate-400 hover:text-neon-cyan text-xs font-mono uppercase transition-all flex items-center justify-center gap-2"
-                        onClick={() => {
-                          setUserFormedit(true);
-                        }}
-                        hidden={!modification || userFormedit}
-                      >
-                        <span className="material-symbols-outlined text-sm">edit</span>
-                        ENABLE_DATA_MODIFICATION
-                      </button>
 
+                        <button
+                          className="mt-6 w-full py-2 border border-slate-700 hover:border-neon-cyan text-slate-400 hover:text-neon-cyan text-xs font-mono uppercase transition-all flex items-center justify-center gap-2"
+                          onClick={async () => {
+                            setUserFormedit(false);
+                            await updateUserInfo();
+                          }}
+                          hidden={!modification || !userFormedit}
+                        >
+                          <span className="material-symbols-outlined text-sm">save</span>
+                          SAVE_DATA_PROTOCOL
+                        </button>
 
-                      <button
-                        className="mt-6 w-full py-2 border border-slate-700 hover:border-neon-cyan text-slate-400 hover:text-neon-cyan text-xs font-mono uppercase transition-all flex items-center justify-center gap-2"
-                        onClick={async () => {
-                          setUserFormedit(false);
-                          await updateUserInfo();
-                        }}
-                        hidden={!modification || !userFormedit}
-                      >
-                        <span className="material-symbols-outlined text-sm">save</span>
-                        SAVE_DATA_PROTOCOL
-                      </button>
-
+                      </div>
 
 
                     </div>
@@ -504,52 +511,55 @@ export default function Home() {
 
                         <p className="text-slate-400 text-xs font-mono mb-4">Connection stable. Data stream active.</p>
 
-                        <button
-                          className="w-full py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all flex items-center justify-center gap-2"
-                          hidden={peymentStatus || partner_status}
-                          onClick={() => {
-                            enableLoadingBar();
-                            createPartner();
-                          }}
-                        >
-                          <span className="material-symbols-outlined text-sm">check</span>
-                          SAVE_DATA_PROTOCOL
-                        </button>
+                        <div hidden={!registration_process_status}>
+
+                          <button
+                            className="w-full py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all flex items-center justify-center gap-2"
+                            hidden={peymentStatus || partner_status}
+                            onClick={() => {
+                              enableLoadingBar();
+                              createPartner();
+                            }}
+                          >
+                            <span className="material-symbols-outlined text-sm">check</span>
+                            SAVE_DATA_PROTOCOL
+                          </button>
 
 
-                        {/* SYNC */}
-                        <button
-                          className="w-full py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all flex items-center justify-center gap-2"
-                          hidden={peymentStatus || !partner_status}
-                          onClick={() => {
-                            syncPartnerInfo();
-                          }}
-                        >
-                          <span className="material-symbols-outlined text-sm">sync</span>
-                          SYNC_DATA_PROTOCOL
-                        </button>
+                          {/* SYNC */}
+                          <button
+                            className="w-full py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all flex items-center justify-center gap-2"
+                            hidden={peymentStatus || !partner_status}
+                            onClick={() => {
+                              syncPartnerInfo();
+                            }}
+                          >
+                            <span className="material-symbols-outlined text-sm">sync</span>
+                            SYNC_DATA_PROTOCOL
+                          </button>
 
 
-                        {/* DELETE */}
-                        <button
-                          className="w-full py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all flex items-center justify-center gap-2"
-                          hidden={peymentStatus || !partner_status}
-                          onClick={() => {
-                            enableLoadingBar();
-                            removePartnerInfo();
+                          {/* DELETE */}
+                          <button
+                            className="w-full py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all flex items-center justify-center gap-2"
+                            hidden={peymentStatus || !partner_status}
+                            onClick={() => {
+                              enableLoadingBar();
+                              removePartnerInfo();
 
-                            setPartnerStatus(false);
-                            setUserPaernerEmail('');
-                            setUserPaernerName('');
-                            setUserPaernerId('');
-                            setparnrtCardVisibility(false);
-                          }}
-                        >
-                          <span className="material-symbols-outlined text-sm">delete</span>
-                          WIPE_PARTNER
-                        </button>
+                              setPartnerStatus(false);
+                              setUserPaernerEmail('');
+                              setUserPaernerName('');
+                              setUserPaernerId('');
+                              setparnrtCardVisibility(false);
+                            }}
+                          >
+                            <span className="material-symbols-outlined text-sm">delete</span>
+                            WIPE_PARTNER
+                          </button>
 
 
+                        </div>
                       </div>
 
 
@@ -562,7 +572,7 @@ export default function Home() {
                         <p className="text-slate-500 text-xs font-mono mt-1 mb-4"
                           hidden={peymentStatus}>Join a cluster or initiate a new protocol.</p>
 
-                        <div className=" " >
+                        <div hidden={!registration_process_status} >
                           <button className="py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border w-full border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all"
                             hidden={peymentStatus}
                             onClick={() => {
@@ -652,8 +662,6 @@ export default function Home() {
                     </div>
 
                     {/* schedule   */}
-
-
                     <div className="col-span-1 md:col-span-7 glass-panel border border-slate-700/50 rounded-xl p-0 relative overflow-hidden group flex flex-col">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-neon-cyan/5 rounded-full blur-2xl pointer-events-none"></div>
                       <div className="p-6 border-b border-slate-800 bg-black/20 backdrop-blur-sm flex justify-between items-center z-10">
@@ -731,7 +739,6 @@ export default function Home() {
 
 
                     </div>
-
 
 
                     {/* rules  */}
@@ -817,10 +824,23 @@ export default function Home() {
 
                     </div>
 
+                    {/* attendence  */}
+                    <AttendenceCard/>
+                    {/* <div hidden={!attendence_process_status}>
+                    </div> */}
+
+
+                    {/* project submit */}
+                    <ProjectSubmit />
+                    {/* <div hidden={!project_submit_process_status}>
+                    </div> */}
+
                     {/* admin control */}
                     <div className="col-span-1 md:col-span-7 glass-panel border neon-border-pink rounded-xl p-6 relative overflow-hidden group flex flex-col" hidden={!(userType == 'root')}>
                       <AdminController />
                     </div>
+
+
 
                   </div>
 

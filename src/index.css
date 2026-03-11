@@ -4,6 +4,7 @@
 :root {
     --neon-cyan: #00f3ff;
     --neon-pink: #ff0055;
+    --neon-red: #f32a2a;
     --neon-yellow: #ffee00;
     --neon-green: #00ff9d;
     --orange1: #fe9a00;
@@ -259,6 +260,10 @@ body {
     box-shadow: 0 0 10px rgba(255, 238, 0, 0.1), inset 0 0 20px rgba(255, 238, 0, 0.05);
 }
 
+.neon-border-red {
+    border: 1px solid rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.1), inset 0 0 20px rgba(255, 0, 0, 0.05);
+}
 .scan-line-anim {
     position: absolute;
     top: 0;

@@ -12,19 +12,21 @@ const useUserDataIO = () => {
     const { giveRecods } = useAdminControls();
 
     const {
-        userId, userName, department, batch,
+        userId, userName, department, batch, team_id,
         phone, setUserPhone, partnerName, partneremail,
         setUserDepartment, setUserBatch, setPartnerStatus,
         setUserPaernerName, setUserPaernerdp, setUserPaernerId,
         setUserPaernerEmail, setUserReg, setLogin, email,
-        setPayStatus, settxn, userType, setuserType, setSuper
+        setPayStatus, settxn, userType, setuserType, setSuper,
+        super_mode, setAttendence, setProjectTitle, setProjectDeployment,
+        setProjectRepo, project_id, setProjectId
 
     } = useUserDetailsStore();
 
     const { currentdepartment } = useDepartmentSelector();
     const { year } = useYearSelector();
 
-    const { disableLoadingBar, enableLoadingBar, setAdmins, setInvoice } = useEventDetailsStore();
+    const { disableLoadingBar, enableLoadingBar, setAdmins, setInvoice, registration_process_status } = useEventDetailsStore();
 
 
     const { setUserToLocalStorage, getUserFromLocalStorage } = useUserAuthHook();
@@ -99,6 +101,28 @@ const useUserDataIO = () => {
                 if (data.super !== undefined && data.super !== null) {
                     setSuper(data.super);
                 }
+
+                if (data.present !== undefined && data.present !== null) {
+                    setAttendence(data.present);
+                }
+
+                if (data.project_title !== undefined && data.project_title !== null) {
+                    setProjectTitle(data.project_title);
+                }
+
+                if (data.repo !== undefined && data.repo !== null) {
+                    setProjectRepo(data.repo);
+                }
+
+                if (data.deployment !== undefined && data.deployment !== null) {
+                    setProjectDeployment(data.deployment);
+                }
+
+                if (data.project_id !== undefined && data.project_id !== null) {
+                    setProjectId(data.project_id);
+                }
+
+
                 // console.log(data);
 
 
@@ -926,6 +950,256 @@ const useUserDataIO = () => {
         }
     };
 
+
+    const toggleRegistrationProcess = async (state) => {
+        if (userType != 'root' || !super_mode) {
+            return
+        }
+
+        setAppStatus('settingUp..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/event/reg/${userId}?reg_state=${state}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                await getEventData();
+                // await getAdminInfo();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+    };
+
+
+    const toggleAttendProcess = async (state) => {
+        if (userType != 'root' || !super_mode) {
+            return
+        }
+
+        setAppStatus('settingUp..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/event/attendence/${userId}?attendence_state=${state}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                await getEventData();
+                // await getAdminInfo();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+    };
+
+
+
+    const toggleSubmitProcess = async (state) => {
+        if (userType != 'root' || !super_mode) {
+            return
+        }
+
+        setAppStatus('settingUp..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/event/submits/${userId}?submit_state=${state}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                await getEventData();
+                // await getAdminInfo();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+    };
+
+
+    const markAttend = async () => {
+
+        setAppStatus('marking..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/user/attendence/${team_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                // await getEventData();
+                // await getAdminInfo();
+                await getFullUserInfo()
+                setAppStatus("marked!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+
+    };
+
+
+    const submitProject = async (title, deployment, repo) => {
+
+        setAppStatus('submitting..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/user/project/${team_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "project_title": title,
+                        "deployment": deployment,
+                        "repo": repo
+                    })
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                // await getEventData();
+                // await getAdminInfo();
+                await getFullUserInfo()
+                setAppStatus("inserted!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+
+    };
+
+
+
     return {
         getFullUserInfo, deleteSchedule,
         updateUserInfo, updateSchedule,
@@ -934,7 +1208,10 @@ const useUserDataIO = () => {
         createRule, updateRule, deleteRule,
         createOrganizer, updateOrganizer,
         deleteOrganizer, getAdminInfo,
-        updateAdminInfo, downloadRegCsv
+        updateAdminInfo, downloadRegCsv,
+        toggleRegistrationProcess,
+        toggleAttendProcess, submitProject,
+        toggleSubmitProcess, markAttend
     }
 
 

@@ -17,7 +17,9 @@ const useEventDetailsStore = create((set) => ({
   matrix: null,
   admins: [],
   invoice: null,
-
+  registration_process_status: false,
+  attendence_process_status: false,
+  project_submit_process_status: false,
 
 
   enableLoadingBar: () => set({ LoadingBar: true }),
@@ -29,6 +31,9 @@ const useEventDetailsStore = create((set) => ({
   setMatrix: (params) => set({ matrix: params }),
   setAdmins: (params) => set({ admins: params }),
   setInvoice: (params) => set({ invoice: params }),
+  setRegistration: (params) => set({ registration_process_status: params }),
+  setAttendence: (params) => set({ attendence_process_status: params }),
+  setProject: (params) => set({ project_submit_process_status: params }),
 
 }))
 

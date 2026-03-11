@@ -1,5 +1,6 @@
 import AdminController from "./cards/AdminController";
 import AdminIdCard from "./cards/AdminIdCard";
+import AttendenceCard from "./cards/AttendenceCard";
 import CommandCenter from "./cards/CommandCenter";
 import DateCounter from "./cards/DateCounter";
 import DepartmentMatrix from "./cards/DepartmentMatrix";
@@ -7,6 +8,7 @@ import Invoice from "./cards/Invoice";
 import OrganizerDeck from "./cards/OrganizerDeck";
 import OrganizersCard from "./cards/organizersCard";
 import OrganizerTiles from "./cards/OrganizerTiles";
+import ProjectSubmit from "./cards/ProjectSubmit";
 import Radar from "./cards/Radar";
 import RuleCard from "./cards/RuleCard";
 import ScheduleCard from "./cards/ScheduleCard";
@@ -15,6 +17,8 @@ import Navbar1 from "./header/Navbar1";
 import Navbar2 from "./header/Navbar2";
 import AiemSnakeLoader from "./loading/aiem_loading";
 export {
+    ProjectSubmit,
+    AttendenceCard,
     Invoice,
     AdminIdCard,
     AdminController,
