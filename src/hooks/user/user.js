@@ -5,26 +5,31 @@ import { useUserAuthHook } from "../auth/userAuth";
 import useDepartmentSelector from "../inputs/deptselector";
 import useYearSelector from "../inputs/yearselector";
 import { UseStartup } from "../startup/UseStartup";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const useUserDataIO = () => {
     const { setAppStatus } = useEventDetailsStore();
     const { giveRecods } = useAdminControls();
 
     const {
-        userId, userName, department, batch,
+        userId, userName, department, batch, team_id,
         phone, setUserPhone, partnerName, partneremail,
         setUserDepartment, setUserBatch, setPartnerStatus,
         setUserPaernerName, setUserPaernerdp, setUserPaernerId,
         setUserPaernerEmail, setUserReg, setLogin, email,
-        setPayStatus, settxn, userType, setuserType, setSuper
+        setPayStatus, settxn, userType, setuserType, setSuper,
+        super_mode, setAttendence, setProjectTitle, setProjectDeployment,
+        setProjectRepo, project_id, setProjectId
 
     } = useUserDetailsStore();
 
     const { currentdepartment } = useDepartmentSelector();
     const { year } = useYearSelector();
 
-    const { disableLoadingBar, enableLoadingBar, setAdmins, setInvoice } = useEventDetailsStore();
+    const {
+        disableLoadingBar, enableLoadingBar,
+        setAdmins, setInvoice, registration_process_status, attendence_process_status, setAttendanceCount
+    } = useEventDetailsStore();
 
 
     const { setUserToLocalStorage, getUserFromLocalStorage } = useUserAuthHook();
@@ -37,6 +42,14 @@ const useUserDataIO = () => {
     }, [userType]);
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
+
+
+    const statusRef = useRef(attendence_process_status);
+
+    // Keep the ref updated whenever the state changes
+    useEffect(() => {
+        statusRef.current = attendence_process_status;
+    }, [attendence_process_status]);
 
     const getFullUserInfo = async () => {
 
@@ -99,6 +112,28 @@ const useUserDataIO = () => {
                 if (data.super !== undefined && data.super !== null) {
                     setSuper(data.super);
                 }
+
+                if (data.present !== undefined && data.present !== null) {
+                    setAttendence(data.present);
+                }
+
+                if (data.project_title !== undefined && data.project_title !== null) {
+                    setProjectTitle(data.project_title);
+                }
+
+                if (data.repo !== undefined && data.repo !== null) {
+                    setProjectRepo(data.repo);
+                }
+
+                if (data.deployment !== undefined && data.deployment !== null) {
+                    setProjectDeployment(data.deployment);
+                }
+
+                if (data.project_id !== undefined && data.project_id !== null) {
+                    setProjectId(data.project_id);
+                }
+
+
                 // console.log(data);
 
 
@@ -823,7 +858,7 @@ const useUserDataIO = () => {
             console.error("Profile fetch failed:", error);
             disableLoadingBar()
         }
-    }
+    };
 
 
     const updateAdminInfo = async (id, params) => {
@@ -872,6 +907,37 @@ const useUserDataIO = () => {
 
     }
 
+
+    const attendanceCounter = async () => {
+        if (userType !== 'root') return;
+
+        try {
+            const res = await fetch(BACKEND_API + `/root/admins/attendance/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (res.status === 200) {
+                const data = await res.json();
+                setAttendanceCount(data);
+                // console.log(data);
+                getEventData();
+
+
+                // Check the REF, not the state variable
+                if (statusRef.current) {
+                    // IMPORTANT: Add a slight delay to prevent spamming your server
+                    setTimeout(attendanceCounter, 7000);
+                }
+            } else if (res.status === 501) {
+                setAppStatus("server busy");
+            } else {
+                console.log(res.status);
+            }
+        } catch (error) {
+            setAppStatus("try again");
+        }
+    };
 
     // csv data downloading 
 
@@ -926,6 +992,272 @@ const useUserDataIO = () => {
         }
     };
 
+    // admin controls 
+
+    const toggleRegistrationProcess = async (state) => {
+        if (userType != 'root' || !super_mode) {
+            setAppStatus("UnAuthorized")
+            return
+        }
+
+        setAppStatus('settingUp..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/event/reg/${userId}?reg_state=${state}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                await getEventData();
+                // await getAdminInfo();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+    };
+
+
+    const toggleAttendProcess = async (state) => {
+        if (userType != 'root' || !super_mode) {
+            setAppStatus("UnAuthorized")
+            return
+        }
+
+        setAppStatus('settingUp..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/event/attendence/${userId}?attendence_state=${state}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                await getEventData();
+                // await getAdminInfo();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+    };
+
+
+
+    const toggleSubmitProcess = async (state) => {
+        if (userType != 'root' || !super_mode) {
+            setAppStatus("UnAuthorized")
+            return
+        }
+
+        setAppStatus('settingUp..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/event/submits/${userId}?submit_state=${state}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                await getEventData();
+                // await getAdminInfo();
+                setAppStatus("updated!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+    };
+
+
+    const markAttend = async () => {
+
+        setAppStatus('marking..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/user/attendence/${team_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // if (!response.ok) {
+            //     throw new Error(' failed from server');
+            // }
+
+            if (response.status == 200) {
+                // await getEventData();
+                // await getAdminInfo();
+                await getFullUserInfo()
+                setAppStatus("marked!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+
+    };
+
+
+    const submitProject = async (title, deployment, repo) => {
+
+        setAppStatus('submitting..');
+        enableLoadingBar();
+
+        try {
+            // 1. Fetch the data from your FastAPI backend
+            const response = await fetch(BACKEND_API + `/user/project/${team_id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        "project_title": title,
+                        "deployment": deployment,
+                        "repo": repo
+                    })
+            });
+
+            if (!response.ok) {
+                throw new Error(' failed from server');
+            }
+
+            if (response.status == 200) {
+                // await getEventData();
+                // await getAdminInfo();
+                await getFullUserInfo()
+                setAppStatus("inserted!");
+                disableLoadingBar()
+
+
+            } else if (response.status == 501) {
+                setAppStatus("server busy")
+                disableLoadingBar()
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
+            } else {
+                console.log(response.status);
+                setAppStatus("try again")
+                disableLoadingBar()
+            }
+
+        } catch (error) {
+            console.error('Error  toggle registration:', error);
+            setAppStatus('SERVER BUSY');
+            disableLoadingBar();
+        }
+
+
+    };
+
+
+
     return {
         getFullUserInfo, deleteSchedule,
         updateUserInfo, updateSchedule,
@@ -934,7 +1266,11 @@ const useUserDataIO = () => {
         createRule, updateRule, deleteRule,
         createOrganizer, updateOrganizer,
         deleteOrganizer, getAdminInfo,
-        updateAdminInfo, downloadRegCsv
+        updateAdminInfo, downloadRegCsv,
+        toggleRegistrationProcess,
+        toggleAttendProcess, submitProject,
+        toggleSubmitProcess, markAttend,
+        attendanceCounter,
     }
 
 

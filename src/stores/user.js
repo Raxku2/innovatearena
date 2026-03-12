@@ -10,7 +10,7 @@ const useUserDetailsStore = create((set) => ({
     partnerName: '',
     partneremail: '',
     partnerdp: '',
-    dp: '',
+    dp: null,
     userType: '',
     registrationStatus: false,
     peymentStatus: false,
@@ -19,6 +19,11 @@ const useUserDetailsStore = create((set) => ({
     partnerid: '',
     partner_status: false,
     super_mode: false,
+    attendence: false,
+    project_title: null,
+    project_deployument: null,
+    project_repo: null,
+    project_id:null,
 
 
     setLogin: (username, email, dp, user_id, actype, teamId) => set({
@@ -54,7 +59,12 @@ const useUserDetailsStore = create((set) => ({
     setPayStatus: (param) => set({ peymentStatus: param }),
     settxn: (param) => set({ txnId: param }),
     setuserType: (param) => set({ userType: param }),
-    setSuper: (param) => set({ super_mode: param })
+    setSuper: (param) => set({ super_mode: param }),
+    setAttendence: (param) => set({ attendence: param }),
+    setProjectTitle: (param) => set({ project_title: param }),
+    setProjectDeployment: (param) => set({ project_deployument: param }),
+    setProjectRepo: (param) => set({ project_repo: param }),
+    setProjectId: (param) => set({ project_id: param }),
 
 }))
 
