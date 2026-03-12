@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useEventDetailsStore, useUserDetailsStore } from '../../stores';
 import { useUserDataIO } from '../../hooks';
 
 export default function AttendenceCard() {
     const {
         attendence_process_status,
-        project_submit_process_status,
-        peymentStatus, registrationStatus,
     } = useEventDetailsStore();
-    const { attendence, setAttendence } = useUserDetailsStore();
+    const { attendence, setAttendence,
+        peymentStatus, registrationStatus, } = useUserDetailsStore();
     const { markAttend } = useUserDataIO();
+
 
     return (
         <div className="col-span-1 md:col-span-7 glass-panel border-t-2 border-neon-green rounded-xl p-6 relative group hover:bg-neon-green/5 transition-colors duration-500" hidden={!(attendence_process_status && registrationStatus && peymentStatus)}  >
@@ -36,7 +36,7 @@ export default function AttendenceCard() {
             <div className=" absolute inset-0 bg-surface-hacker/95 flex flex-col items-center justify-center z-20 rounded-xl" hidden={!attendence}>
                 <span className="material-symbols-outlined text-neon-green text-5xl mb-2">check_circle</span>
                 <h4 className="text-white font-display font-bold">STATUS: PRESENT</h4>
-                <p className="text-[10px] font-mono text-neon-green">TIMESTAMP: 2026-03-24_10:15:00</p>
+                {/* <p className="text-[10px] font-mono text-neon-green">TIMESTAMP: 2026-03-24_10:15:00</p> */}
             </div>
         </div>
     )

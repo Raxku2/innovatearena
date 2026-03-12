@@ -1,10 +1,10 @@
 import { useEventDetailsStore } from "../../stores"
+import { useUserDataIO } from "../user/user";
 
 const UseStartup = () => {
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
     const { setEventOrga, setEventRules, setEventSchedules, setRegistration, setAttendence, setProject } = useEventDetailsStore();
-
 
     const getEventData = async () => {
         try {

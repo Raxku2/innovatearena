@@ -5,7 +5,7 @@ import { useUserAuthHook } from "../auth/userAuth";
 import useDepartmentSelector from "../inputs/deptselector";
 import useYearSelector from "../inputs/yearselector";
 import { UseStartup } from "../startup/UseStartup";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const useUserDataIO = () => {
     const { setAppStatus } = useEventDetailsStore();
@@ -26,7 +26,10 @@ const useUserDataIO = () => {
     const { currentdepartment } = useDepartmentSelector();
     const { year } = useYearSelector();
 
-    const { disableLoadingBar, enableLoadingBar, setAdmins, setInvoice, registration_process_status } = useEventDetailsStore();
+    const {
+        disableLoadingBar, enableLoadingBar,
+        setAdmins, setInvoice, registration_process_status, attendence_process_status, setAttendanceCount
+    } = useEventDetailsStore();
 
 
     const { setUserToLocalStorage, getUserFromLocalStorage } = useUserAuthHook();
@@ -39,6 +42,14 @@ const useUserDataIO = () => {
     }, [userType]);
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
+
+
+    const statusRef = useRef(attendence_process_status);
+
+    // Keep the ref updated whenever the state changes
+    useEffect(() => {
+        statusRef.current = attendence_process_status;
+    }, [attendence_process_status]);
 
     const getFullUserInfo = async () => {
 
@@ -847,7 +858,7 @@ const useUserDataIO = () => {
             console.error("Profile fetch failed:", error);
             disableLoadingBar()
         }
-    }
+    };
 
 
     const updateAdminInfo = async (id, params) => {
@@ -896,6 +907,37 @@ const useUserDataIO = () => {
 
     }
 
+
+    const attendanceCounter = async () => {
+        if (userType !== 'root') return;
+
+        try {
+            const res = await fetch(BACKEND_API + `/root/admins/attendance/${userId}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (res.status === 200) {
+                const data = await res.json();
+                setAttendanceCount(data);
+                // console.log(data);
+                getEventData();
+
+
+                // Check the REF, not the state variable
+                if (statusRef.current) {
+                    // IMPORTANT: Add a slight delay to prevent spamming your server
+                    setTimeout(attendanceCounter, 7000);
+                }
+            } else if (res.status === 501) {
+                setAppStatus("server busy");
+            } else {
+                console.log(res.status);
+            }
+        } catch (error) {
+            setAppStatus("try again");
+        }
+    };
 
     // csv data downloading 
 
@@ -950,9 +992,11 @@ const useUserDataIO = () => {
         }
     };
 
+    // admin controls 
 
     const toggleRegistrationProcess = async (state) => {
         if (userType != 'root' || !super_mode) {
+            setAppStatus("UnAuthorized")
             return
         }
 
@@ -979,6 +1023,10 @@ const useUserDataIO = () => {
                 disableLoadingBar()
 
 
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
             } else if (response.status == 501) {
                 setAppStatus("server busy")
                 disableLoadingBar()
@@ -1000,6 +1048,7 @@ const useUserDataIO = () => {
 
     const toggleAttendProcess = async (state) => {
         if (userType != 'root' || !super_mode) {
+            setAppStatus("UnAuthorized")
             return
         }
 
@@ -1026,6 +1075,10 @@ const useUserDataIO = () => {
                 disableLoadingBar()
 
 
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
+
             } else if (response.status == 501) {
                 setAppStatus("server busy")
                 disableLoadingBar()
@@ -1048,6 +1101,7 @@ const useUserDataIO = () => {
 
     const toggleSubmitProcess = async (state) => {
         if (userType != 'root' || !super_mode) {
+            setAppStatus("UnAuthorized")
             return
         }
 
@@ -1073,6 +1127,10 @@ const useUserDataIO = () => {
                 setAppStatus("updated!");
                 disableLoadingBar()
 
+
+            } else if (response.status == 401) {
+                setAppStatus("UnAuthorized")
+                disableLoadingBar()
 
             } else if (response.status == 501) {
                 setAppStatus("server busy")
@@ -1107,9 +1165,9 @@ const useUserDataIO = () => {
                 }
             });
 
-            if (!response.ok) {
-                throw new Error(' failed from server');
-            }
+            // if (!response.ok) {
+            //     throw new Error(' failed from server');
+            // }
 
             if (response.status == 200) {
                 // await getEventData();
@@ -1211,7 +1269,8 @@ const useUserDataIO = () => {
         updateAdminInfo, downloadRegCsv,
         toggleRegistrationProcess,
         toggleAttendProcess, submitProject,
-        toggleSubmitProcess, markAttend
+        toggleSubmitProcess, markAttend,
+        attendanceCounter,
     }
 
 
