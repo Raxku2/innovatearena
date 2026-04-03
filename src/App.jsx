@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react'
 import AiemSnakeLoader from './component/loading/aiem_loading'
-import { AuthPage, Home, PrivecyPolicy, RefundPolicy, Terms } from './pages'
+import { AuthPage, Cirtificates, Dashboard, Home, PrivecyPolicy, RefundPolicy, Terms } from './pages'
 import { Footer1, Invoice, Navbar1 } from './component'
 import { AnimatePresence } from 'motion/react'
 import { Link, Route, Routes, useLocation } from "react-router"
-import { useEventDetailsStore } from './stores'
-import { useAdminControls, useGoogleAuth, UseStartup, useUserAuthHook, useUserDataIO } from './hooks'
+import { useEventDetailsStore, useUserDetailsStore } from './stores'
+import { useAdminControls, useGoogleAuth, ProtectedRoute, UseStartup, useUserAuthHook, useUserDataIO } from './hooks'
 
 export default function App() {
   const location = useLocation();
   const { enableLoadingBar, disableLoadingBar, LoadingBar } = useEventDetailsStore();
   const { getUserFromLocalStorage } = useUserAuthHook();
   const { getEventData } = UseStartup();
-  const { getFullUserInfo,getAdminInfo } = useUserDataIO();
+  const { getFullUserInfo, getAdminInfo } = useUserDataIO();
   const { giveRecods } = useAdminControls();
+  const { userType, } = useUserDetailsStore();
 
   useGoogleAuth();
 
@@ -49,10 +50,21 @@ export default function App() {
 
       <AnimatePresence mode='wait'>
         <Routes location={location} key={location.pathname}  >
-          <Route
-            path='/'
-            element={<Home />}
-          />
+          <Route path='/' element={<Home />}
+          >
+            <Route index element={<Dashboard />} />
+
+            <Route path='cirtificate' element={
+              <ProtectedRoute isAllowed={userType}>
+                <Cirtificates />
+              </ProtectedRoute>
+            } />
+
+
+          </Route>
+
+
+
           <Route
             path='/auth'
             element={<AuthPage />}
@@ -69,10 +81,7 @@ export default function App() {
             path='/refund'
             element={<RefundPolicy />}
           />
-          <Route
-            path='/aa'
-            element={<Invoice />}
-          />
+
 
         </Routes>
 

@@ -1,10 +1,8 @@
 import React from 'react'
 import { useAdminControls, useUserDataIO } from '../../hooks';
-import { useEventDetailsStore, useUserDetailsStore } from '../../stores';
+import { useEventDetailsStore } from '../../stores';
 
 export default function CommandCenter() {
-    const BACKEND_API = import.meta.env.VITE_BACKEND_API;
-
 
     const { giveRecods } = useAdminControls();
 

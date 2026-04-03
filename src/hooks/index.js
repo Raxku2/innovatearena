@@ -7,8 +7,10 @@ import { useUserAuthHook } from "./auth/userAuth"
 import { UseStartup } from "./startup/UseStartup"
 import { useUserDataIO } from "./user/user"
 import { usePdfDownload } from "./user/invoice"
+import ProtectedRoute from "./navigations/useProtectedRoute"
 
 export {
+    ProtectedRoute,
     usePdfDownload,
     useAdminControls,
     UseStartup,
