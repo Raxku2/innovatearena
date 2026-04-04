@@ -150,6 +150,23 @@ export default function Home() {
                       </NavLink>
 
 
+                      <NavLink
+                        to="/judge"
+                        className={({ isActive }) =>
+                          clsx(
+                            // 1. These base classes apply all the time
+                            "sidebar-link flex items-center gap-4 px-4 py-3 rounded-r-lg transition-colors",
+
+                            // 2. These classes apply ONLY when active
+                            isActive ? "active" : ""
+                          )
+                        }
+                      >
+                        <span className="material-symbols-outlined text-lg">workspace_premium</span>
+                        <span>JUDGE</span>
+                      </NavLink>
+
+
 
 
 

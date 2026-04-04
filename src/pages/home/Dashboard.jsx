@@ -722,14 +722,10 @@ export default function Dashboard() {
 
                         {/* attendence  */}
                         <AttendenceCard />
-                        {/* <div hidden={!attendence_process_status}>
-                    </div> */}
 
 
                         {/* project submit */}
                         <ProjectSubmit />
-                        {/* <div hidden={!project_submit_process_status}>
-                    </div> */}
 
                         {/* admin control */}
                         <div className="col-span-1 md:col-span-7 glass-panel border neon-border-pink rounded-xl p-6 relative overflow-hidden group flex flex-col" hidden={!(userType == 'root')}>
@@ -811,7 +807,7 @@ export default function Dashboard() {
 
                     </div>
 
-                    {/* <Invoice /> */}
+
                     {/* footer sec */}
                     <div className="col-span-1 md:col-span-12 mt-4 pt-6 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-mono text-slate-600">
                         <span>SYSTEM_ID: <span className="text-slate-400">NODE_001_ALPHA</span></span>

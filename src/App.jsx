@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import AiemSnakeLoader from './component/loading/aiem_loading'
-import { AuthPage, Cirtificates, Dashboard, Home, PrivecyPolicy, RefundPolicy, Terms } from './pages'
+import { AuthPage, Cirtificates, Dashboard, Home, Judge, PrivecyPolicy, RefundPolicy, Terms } from './pages'
 import { Footer1, Invoice, Navbar1 } from './component'
 import { AnimatePresence } from 'motion/react'
 import { Link, Route, Routes, useLocation } from "react-router"
@@ -57,6 +57,12 @@ export default function App() {
             <Route path='cirtificate' element={
               <ProtectedRoute isAllowed={userType}>
                 <Cirtificates />
+              </ProtectedRoute>
+            } />
+
+            <Route path='judge' element={
+              <ProtectedRoute isAllowed={userType}>
+                <Judge />
               </ProtectedRoute>
             } />
 
