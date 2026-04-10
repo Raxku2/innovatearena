@@ -3,7 +3,7 @@ import { create } from 'zustand'
 const useEventDetailsStore = create((set) => ({
   LoadingBar: true,
   AppStatus: "SYSTEM READY",
-  eventDuration: 5,
+  eventDuration: 3,
   eventDomains: 6,
   eventPrize: 2.0,
   venuePhoto: "https://www.abacusinstitute.org/images/slider/slide1.jpg",
