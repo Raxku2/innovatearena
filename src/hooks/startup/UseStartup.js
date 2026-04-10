@@ -4,7 +4,7 @@ import { useUserDataIO } from "../user/user";
 const UseStartup = () => {
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
-    const { setEventOrga, setEventRules, setEventSchedules, setRegistration, setAttendence, setProject } = useEventDetailsStore();
+    const { setEventOrga, setEventRules, setEventSchedules, setRegistration, setAttendence, setProject, setEventDate } = useEventDetailsStore();
 
     const getEventData = async () => {
         try {
@@ -19,6 +19,7 @@ const UseStartup = () => {
                 setRegistration(data.registration_process);
                 setAttendence(data.attendence_process);
                 setProject(data.submit_process)
+                setEventDate(data.event_time)
 
             }
 
