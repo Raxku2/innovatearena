@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { useEventDetailsStore } from '../../stores';
 
 const DateCounter = () => {
+
+
+  const { eventDate, } = useEventDetailsStore();
+
   const [timeLeft, setTimeLeft] = useState({
     days: '00', hours: '00', minutes: '00', seconds: '00'
   });
@@ -31,7 +36,7 @@ const DateCounter = () => {
 
   useEffect(() => {
     // Target: April 8, 2026 00:00:00 IST
-    const targetDate = new Date('2026-04-21T11:00:00+05:30').getTime();
+    const targetDate = new Date(eventDate).getTime();
 
     const updateTimer = () => {
       // 3. Apply the drift to the current local time to get the "True" time

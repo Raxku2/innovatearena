@@ -15,7 +15,7 @@ export default function Home() {
   // zustand stores
   const {
     dp, userName, email, userId,
-    team_id, txnId, userType,
+    team_id, judge_role, userType,
   } = useUserDetailsStore();
 
   const {
@@ -144,28 +144,29 @@ export default function Home() {
                             isActive ? "active" : ""
                           )
                         }
+                        hidden
                       >
                         <span className="material-symbols-outlined text-lg">workspace_premium</span>
                         <span>CERTIFICATE</span>
                       </NavLink>
 
+                      {(judge_role || userType == 'root') &&
+                        <NavLink
+                          to="/judge"
+                          className={({ isActive }) =>
+                            clsx(
+                              // 1. These base classes apply all the time
+                              "sidebar-link flex items-center gap-4 px-4 py-3 rounded-r-lg transition-colors",
 
-                      <NavLink
-                        to="/judge"
-                        className={({ isActive }) =>
-                          clsx(
-                            // 1. These base classes apply all the time
-                            "sidebar-link flex items-center gap-4 px-4 py-3 rounded-r-lg transition-colors",
-
-                            // 2. These classes apply ONLY when active
-                            isActive ? "active" : ""
-                          )
-                        }
-                      >
-                        <span className="material-symbols-outlined text-lg">workspace_premium</span>
-                        <span>JUDGE</span>
-                      </NavLink>
-
+                              // 2. These classes apply ONLY when active
+                              isActive ? "active" : ""
+                            )
+                          }
+                        >
+                          <span className="material-symbols-outlined text-lg">workspace_premium</span>
+                          <span>JUDGE</span>
+                        </NavLink>
+                      }
 
 
 

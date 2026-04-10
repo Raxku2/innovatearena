@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useEventDetailsStore, useUserDetailsStore } from '../../stores';
+import { useEventDetailsStore, useJudgesStore, useUserDetailsStore } from '../../stores';
+import { useJudges } from '../../hooks';
+import JudgeCard from './JudgeCard';
 
 export default function JudgeAssign() {
     const { userType, super_mode } = useUserDetailsStore();
@@ -9,7 +11,12 @@ export default function JudgeAssign() {
     const [users, setUsers] = useState([])
     const [currentId, setCurrentId] = useState('');
 
-    
+    const { makeJudge, removeJudge, loadAllJudges } = useJudges();
+    const { allJudges } = useJudgesStore();
+
+    useEffect(() => {
+        loadAllJudges();
+    }, []);
 
     useEffect(() => {
         if (matrix) {
@@ -21,7 +28,6 @@ export default function JudgeAssign() {
     }, [matrix]);
 
 
-    
     return (
         <div>
 
@@ -32,30 +38,16 @@ export default function JudgeAssign() {
             <div className="flex items-center mb-6 border-b border-neon-pink/20 pb-3 relative z-10">
                 <h2 className="text-neon-pink font-display font-bold text-xl tracking-wider flex items-center gap-2">
                     <span className="w-2 h-2 bg-neon-pink rounded-full animate-pulse shadow-[0_0_8px_#ff0055]"></span>
-                    ADMIN_CONTROL_VAULT
+                    JUDGE_CONTROL_VAULT
                 </h2>
             </div>
 
+
             <div className="space-y-3 relative z-10 font-mono">
-                <div className="bg-black/60 border-l-2 border-neon-pink p-3 flex justify-between items-center hover:bg-white/5 transition-colors">
-                    <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-slate-500 text-sm">terminal</span>
-                        <span className="text-white text-sm">root@innovate.dev</span>
-                    </div>
-                    <div className="flex gap-2">
-                        <button className="btn-action btn-cyan">MODIFY_PRIVILEGE</button>
-                        <button className="btn-action btn-pink">REVOKE_KEY</button>
-                    </div>
-                </div>
 
-                {/* {
-                    admins.map((e, i) => {
-                        // console.log(e);
-
-                        return (<AdminIdCard key={i} email={e.email} />)
-                    })
-                } */}
-
+                {
+                    allJudges.map((e, i) => (<JudgeCard key={i} id_obj={e} />))
+                }
 
                 <button className="mt-6 w-full py-3 border border-dashed border-slate-600 hover:border-neon-pink text-slate-500 hover:text-neon-pink text-xs font-mono uppercase transition-all flex items-center justify-center gap-2 group/btn" hidden={!(userType == 'root' && super_mode)}
                     onClick={() => {
@@ -102,14 +94,15 @@ export default function JudgeAssign() {
                     <div className="flex flex-wrap justify-center gap-3 w-full">
                         <button className="flex-1 min-w-30 px-4 py-2 border border-neon-green/50 text-neon-green font-mono text-xs uppercase hover:bg-neon-green/10 transition-colors shadow-[0_0_10px_rgba(0,255,157,0.2)] hover:shadow-[0_0_15px_rgba(0,255,157,0.4)]"
                             onClick={() => {
+                                makeJudge(currentId)
+                                setCurrentId("422")
                                 setEditingControls(false);
-                                
                             }}
                         >INSERT_CHANGES</button>
 
                         <button className="flex-1 min-w-30 px-4 py-2 border border-slate-600 text-slate-400 font-mono text-xs uppercase hover:bg-slate-800 transition-colors"
                             onClick={() => {
-
+                                setCurrentId("422")
                                 setEditingControls(false);
                             }}
                         >DISCARD_DATA</button>

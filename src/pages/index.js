@@ -1,3 +1,5 @@
+// pages
+
 import AuthPage from "./auth/AuthPage";
 import PrivecyPolicy from "./essentials/PrivecyPolicy";
 import RefundPolicy from "./essentials/RefundPolicy";

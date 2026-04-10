@@ -36,6 +36,7 @@ const useEventDetailsStore = create((set) => ({
   setAttendence: (params) => set({ attendence_process_status: params }),
   setProject: (params) => set({ project_submit_process_status: params }),
   setAttendanceCount: (params) => set({ attendanceCount: params }),
+  setEventDate: (params) => set({ eventDate: params }),
 
 }))
 

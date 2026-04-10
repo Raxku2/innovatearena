@@ -4,9 +4,8 @@ export default function SubmitsCard() {
     return (
 
         <div className="relative bg-slate-900/40 p-6 border border-slate-800/50 group hover:border-primary/50 transition-all duration-500">
-            
+
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-                
                 <div className="md:col-span-12 flex flex-col justify-between">
                     <div>
                         <h3 className="text-2xl font-headline font-bold text-on-surface mb-2 tracking-tight uppercase">Neural_Link_v1</h3>
@@ -33,12 +32,14 @@ export default function SubmitsCard() {
                     </div>
                 </div>
             </div>
+
             <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-2">
                 <button className="bg-black border border-primary text-primary font-mono text-xs py-2 hover:bg-primary hover:text-black transition-all uppercase tracking-tighter">1st_PLACE</button>
                 <button className="bg-black border border-cyan-700 text-cyan-700 font-mono text-xs py-2 hover:bg-cyan-700 hover:text-white transition-all uppercase tracking-tighter">2nd_PLACE</button>
                 <button className="bg-black border border-emerald-500 text-emerald-500 font-mono text-xs py-2 hover:bg-emerald-500 hover:text-black transition-all uppercase tracking-tighter">3rd_PLACE</button>
                 <button className="bg-black border border-secondary text-secondary font-mono text-xs py-2 hover:bg-secondary hover:text-white transition-all uppercase tracking-tighter">ELIMINATE_PROCESS</button>
             </div>
+
             <div className="mt-6 flex justify-between items-center border-t border-slate-800/50 pt-4">
                 <div className="flex gap-4">
                     <button className="text-xs font-mono text-slate-400 hover:text-primary transition-colors flex items-center gap-1">

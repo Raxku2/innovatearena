@@ -1,3 +1,5 @@
+// Components
+
 import AdminController from "./cards/AdminController";
 import AdminIdCard from "./cards/AdminIdCard";
 import AttendenceCard from "./cards/AttendenceCard";
@@ -6,6 +8,7 @@ import DateCounter from "./cards/DateCounter";
 import DepartmentMatrix from "./cards/DepartmentMatrix";
 import Invoice from "./cards/Invoice";
 import JudgeAssign from "./cards/JudgeAssign";
+import JudgeCard from "./cards/JudgeCard";
 import OrganizerDeck from "./cards/OrganizerDeck";
 import OrganizersCard from "./cards/organizersCard";
 import OrganizerTiles from "./cards/OrganizerTiles";
@@ -21,6 +24,7 @@ import Navbar2 from "./header/Navbar2";
 import AiemSnakeLoader from "./loading/aiem_loading";
 
 export {
+    JudgeCard,
     SubmitsCard,
     SubmitContainers,
     JudgeAssign,
