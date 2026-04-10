@@ -225,7 +225,7 @@ export default function Landing() {
                                         <span className="text-transparent bg-clip-text bg-linear-to-r from-(--neon-yellow) to-(--neon-green)">PURE ADRENALINE.</span>
                                     </h3>
                                     <p className="text-slate-400 font-mono text-lg leading-relaxed border-l-4 border-(--neon-cyan)/50 pl-6 bg-linear-to-r from-(--neon-cyan)/5 to-transparent py-4">
-                                        &gt; INITIATING 5-HOUR SPRINT SEQUENCE.<br />
+                                        &gt; INITIATING 3-HOUR SPRINT SEQUENCE.<br />
                                         &gt; SEARCHING FOR ARCHITECTS...<br />
                                         &gt; OBJECTIVE: PROTOTYPE THE IMPOSSIBLE.
                                     </p>
