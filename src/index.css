@@ -11,6 +11,8 @@
     --emerald: #00bc7d;
 }
 
+
+
 body {
     background-color: #030508;
     background-image:
@@ -264,6 +266,7 @@ body {
     border: 1px solid rgba(255, 0, 0, 0.3);
     box-shadow: 0 0 10px rgba(255, 0, 0, 0.1), inset 0 0 20px rgba(255, 0, 0, 0.05);
 }
+
 .scan-line-anim {
     position: absolute;
     top: 0;
@@ -456,4 +459,16 @@ html {
 
 .glow-border {
     box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+}
+
+
+
+.glass-terminal {
+    background: rgba(10, 15, 20, 0.85);
+    backdrop-filter: blur(8px);
+}
+
+.scanline-hover:hover {
+    background: linear-gradient(to bottom, transparent 0%, rgba(0, 243, 255, 0.05) 50%, transparent 100%);
+    background-size: 100% 200%;
 }
