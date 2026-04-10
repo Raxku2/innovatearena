@@ -10,8 +10,8 @@ const useEventDetailsStore = create((set) => ({
   venueLocation: "MAGRA_CAMPUS // ABACUS INSTITUTE",
   teamSize: "1-2",
   registrationOpen: 'MARCH 5',
-  registrationClose: 'APRIL 04',
-  eventDate: 'APRIL 08',
+  registrationClose: 'APRIL 20',
+  eventDate: 'APRIL 21',
   eventOrganizers: [],
   rules: [],
   matrix: null,
@@ -36,6 +36,7 @@ const useEventDetailsStore = create((set) => ({
   setAttendence: (params) => set({ attendence_process_status: params }),
   setProject: (params) => set({ project_submit_process_status: params }),
   setAttendanceCount: (params) => set({ attendanceCount: params }),
+  setEventDate: (params) => set({ eventDate: params }),
 
 }))
 

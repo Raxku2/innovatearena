@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useEventDetailsStore } from '../../stores'
 
 export default function Invoice({ customInvoiceData }) {
     const storeInvoice = useEventDetailsStore(state => state.invoice);
 
-    // Use the prop if provided (for the PDF), otherwise use the store (for the UI)
     const invoice = customInvoiceData || storeInvoice;
 
     if (!invoice) return null;
 
-    // Extract variables DIRECTLY. No useEffect needed!
     const payDate = invoice['pay_data']['payment_created_at'];
     const transactionId = invoice.acquirer_data['rrn'];
     const payMethod = invoice.method;
@@ -35,21 +33,31 @@ export default function Invoice({ customInvoiceData }) {
     };
 
 
+
     return (
-        <div>
-            {/* <!-- Main Invoice Container --> */}
-            <div className="max-w-212.5 w-full bg-slate-900/50 backdrop-blur-xl border border-primary/20 rounded-xl overflow-hidden shadow-2xl print-container glow-border">
-                {/* <!-- Tech Accent Bar --> */}
+        // The mobile scroll wrapper (do NOT target this with your PDF generator)
+        <div className="w-full overflow-x-auto pb-4 [-webkit-text-size-adjust:100%]">
+
+            {/* The Invoice Container - Now exactly A4 width (794px) */}
+            {/* TARGET THIS DIV WITH YOUR PDF GENERATOR (.print-container) */}
+            <div className="w-198.5 min-w-198.5 min-h-280.75 bg-slate-900/50 backdrop-blur-xl border border-primary/20 rounded-xl overflow-hidden shadow-2xl print-container glow-border">
+
+                {/* ... rest of your invoice code ... */}
+                {/* ... rest of the code ... */}
+
+
+
+
                 <div className="h-1.5 w-full bg-linear-to-r from-primary/20 via-primary to-primary/20"></div>
-                <div className="p-8 md:p-12">
-                    {/* <!-- Branding & Header Section --> */}
-                    <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-12">
+
+                {/* 3. Forced generous padding */}
+                <div className="p-12">
+
+                    {/* 4. Removed flex-col, forced flex-row */}
+                    <div className="flex flex-row justify-between items-start gap-8 mb-12">
                         <div className="flex flex-col gap-6">
                             <div className="flex items-center gap-3">
                                 <div className="size-10 flex items-center justify-center rounded-lg shadow-[0_0_15px_rgba(0,212,255,0.4)]">
-                                    {/* <svg className="w-4 h-4 text-slate-900" fill="currentColor" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-                                        <path clip-rule="evenodd" d="M12.0799 24L4 19.2479L9.95537 8.75216L18.04 13.4961L18.0446 4H29.9554L29.96 13.4961L38.0446 8.75216L44 19.2479L35.92 24L44 28.7521L38.0446 39.2479L29.96 34.5039L29.9554 44H18.0446L18.04 34.5039L9.95537 39.2479L4 28.7521L12.0799 24Z" fill-rule="evenodd"></path>
-                                    </svg> */}
                                     <img src="./favicon.ico" alt="" />
                                 </div>
                                 <div>
@@ -61,7 +69,7 @@ export default function Invoice({ customInvoiceData }) {
                                 <h2 className="text-6xl font-black text-white tracking-tighter">INVOICE</h2>
                             </div>
                         </div>
-                        <div className="flex flex-col md:items-end font-mono">
+                        <div className="flex flex-col items-end font-mono">
                             <div className="text-right">
                                 <p className="text-primary text-xs uppercase tracking-widest mb-1">Invoice Identification</p>
                                 <p className="text-white text-xl font-bold">{invoiceId}</p>
@@ -72,8 +80,9 @@ export default function Invoice({ customInvoiceData }) {
                             </div>
                         </div>
                     </div>
-                    {/* <!-- Addresses Section --> */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12 border-t border-b border-primary/10 py-10">
+
+                    {/* 5. Forced grid-cols-2 */}
+                    <div className="grid grid-cols-2 gap-12 mb-8 border-t border-b border-primary/10 py-10">
                         <div className="space-y-4">
                             <div className="flex items-center gap-2 mb-2">
                                 <span className="material-symbols-outlined text-primary text-lg">store</span>
@@ -82,7 +91,6 @@ export default function Invoice({ customInvoiceData }) {
                             <div className="space-y-1">
                                 <p className="text-white font-bold">Rakesh Kundu (Pinaka)</p>
                                 <p className="text-slate-400 text-sm leading-relaxed max-w-xs">
-                                    {/* Aryan Institute of Engineering &amp; Management<br /> */}
                                     Purba Satgachia, Kalna<br />
                                     Purba-Bardhhaman, WestBengal 712512
                                 </p>
@@ -97,15 +105,15 @@ export default function Invoice({ customInvoiceData }) {
                             <div className="space-y-1">
                                 <p className="text-white font-bold">{payerName}</p>
                                 <p className="text-slate-400 text-sm leading-relaxed">
-                                    {/* [College/Institution Placeholder]<br /> */}
                                     {payerPhone}
                                 </p>
                                 <p className="text-primary text-sm font-mono mt-2">{payerEmail}</p>
                             </div>
                         </div>
                     </div>
-                    {/* <!-- Team Info Banner --> */}
-                    <div className="mb-10 bg-primary/5 border border-primary/20 rounded-lg p-6 flex flex-col md:flex-row justify-between items-center gap-6">
+
+                    {/* 6. Forced flex-row */}
+                    <div className="mb-8 bg-primary/5 border border-primary/20 rounded-lg p-6 flex flex-row justify-between items-center gap-6">
                         <div className="flex items-center gap-4">
                             <div className="size-12 rounded bg-primary/10 flex items-center justify-center border border-primary/30">
                                 <span className="material-symbols-outlined text-primary text-2xl">groups</span>
@@ -115,7 +123,7 @@ export default function Invoice({ customInvoiceData }) {
                                 <p className="text-white font-bold text-lg">{teamId}</p>
                             </div>
                         </div>
-                        <div className="flex flex-col md:flex-row gap-6 md:gap-12">
+                        <div className="flex flex-row gap-12">
                             <div className="font-mono">
                                 <p className="text-[10px] uppercase text-slate-500">Member 1</p>
                                 <p className="text-slate-300 text-sm">{nameMember1}</p>
@@ -126,8 +134,8 @@ export default function Invoice({ customInvoiceData }) {
                             </div>
                         </div>
                     </div>
-                    {/* <!-- Itemized Table --> */}
-                    <div className="mb-12 overflow-x-auto">
+
+                    <div className="mb-8">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-primary/20 font-mono text-[10px] uppercase tracking-widest text-slate-500">
@@ -151,21 +159,15 @@ export default function Invoice({ customInvoiceData }) {
                             </tbody>
                         </table>
                     </div>
-                    {/* <!-- Summary & Payment --> */}
-                    <div className="flex flex-col md:flex-row gap-12 justify-between items-start">
-                        {/* <!-- Payment Status Badge --> */}
-                        <div className="order-2 md:order-1 flex flex-col gap-4">
+
+                    {/* 7. Forced flex-row and fixed ordering */}
+                    <div className="flex flex-row gap-12 justify-between items-start">
+                        <div className="flex flex-col gap-4">
                             <div className="inline-flex justify-center items-center px-3 py-2 bg-green-500/10 border border-green-500/30 rounded-full text-green-400 font-bold text-xs text-center uppercase tracking-widest" hidden={!payStatus}>
-                                {/* <span className="size-2 bg-green-500 rounded-full animate-pulse"></span> */}
-                                <p>
-                                    Payment Status: PAID
-                                </p>
+                                <p>Payment Status: PAID</p>
                             </div>
                             <div className="inline-flex justify-center items-center px-3 py-2 bg-red-500/10 border border-red-500/30 rounded-full text-red-400 font-bold text-xs text-center uppercase tracking-widest" hidden={payStatus}>
-                                {/* <span className="size-2 bg-green-500 rounded-full animate-pulse"></span> */}
-                                <p>
-                                    Payment Status: FAILD
-                                </p>
+                                <p>Payment Status: FAILED</p>
                             </div>
                             <div className="bg-slate-800/30 p-4 rounded-lg border border-slate-700/50 space-y-2 font-mono text-xs">
                                 <div className="flex justify-between gap-8">
@@ -182,8 +184,9 @@ export default function Invoice({ customInvoiceData }) {
                                 </div>
                             </div>
                         </div>
-                        {/* <!-- Totals --> */}
-                        <div className="order-1 md:order-2 w-full md:w-64 space-y-3 font-mono">
+
+                        {/* 8. Fixed width for totals column */}
+                        <div className="w-64 space-y-3 font-mono">
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-slate-500">Subtotal</span>
                                 <span className="text-slate-300">₹ {amount}</span>
@@ -198,7 +201,7 @@ export default function Invoice({ customInvoiceData }) {
                             </div>
                         </div>
                     </div>
-                    {/* <!-- Footer / Terms --> */}
+
                     <div className="mt-10 pt-8 border-t border-primary/10 text-center">
                         <p className="text-[10px] text-slate-500 uppercase tracking-[0.3em] font-bold mb-4">Terms &amp; Notes</p>
                         <p className="text-xs text-slate-500 max-w-lg mx-auto leading-relaxed">
@@ -213,26 +216,13 @@ export default function Invoice({ customInvoiceData }) {
                         </div>
                     </div>
                 </div>
-                {/* <!-- Bottom Tech Accent --> */}
+
                 <div className="flex h-1">
                     <div className="w-1/3 bg-primary/20"></div>
                     <div className="w-1/3 bg-primary"></div>
                     <div className="w-1/3 bg-primary/20"></div>
                 </div>
             </div>
-            {/* <!-- Supportive Branding --> */}
-            {/* <div className="mt-8 flex items-center justify-center gap-8 opacity-40 grayscale hover:grayscale-0 transition-all no-print">
-                <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-slate-500">SECURE PAYMENT BY</span>
-                    <span className="font-bold text-white tracking-tighter">Razorpay</span>
-                </div>
-                <div className="w-px h-4 bg-slate-800"></div>
-                <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono text-slate-500">ORGANISED BY</span>
-                    <span className="font-bold text-white tracking-tighter uppercase">AIEM</span>
-                </div>
-            </div> */}
         </div>
-
     )
 }

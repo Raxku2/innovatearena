@@ -32,6 +32,30 @@ export default function Landing() {
     const formattedPrize = prize.toFixed(1);
 
 
+    function eventDateFormatted() {
+        const date = new Date(eventDate);
+
+        // Extract the full month name and convert to uppercase
+        const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
+        const day = date.getDate();
+
+        return `${month} ${day}`;
+    }
+
+    function prevEventDate() {
+        const date = new Date(eventDate);
+
+        date.setDate(date.getDate() - 1);
+
+        // Extract the full month name and convert to uppercase
+        const month = date.toLocaleString('en-US', { month: 'long' }).toUpperCase();
+        const day = date.getDate();
+
+        return `${month} ${day}`;
+    }
+
+
+
 
 
     return (
@@ -171,6 +195,8 @@ export default function Landing() {
                             </div>
                         </div>
                     </section>
+
+
                     <section className="py-24 px-6 relative bg-surface-hacker border-t border-(--neon-cyan)/10" id="mission">
                         <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwgMjQzLCAyNTUsIDAuMSkiLz48L3N2Zz4=')] opacity-20"></div>
                         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
@@ -224,6 +250,8 @@ export default function Landing() {
                             </div>
                         </div>
                     </section>
+
+
                     <section className="py-24 px-6 relative" id="battlegrounds">
                         <div className="max-w-7xl mx-auto">
                             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
@@ -459,14 +487,14 @@ export default function Landing() {
                                 </div>
                                 <div className="relative flex flex-col md:flex-row md:items-center group">
                                     <div className="hidden md:block w-1/2 text-right pr-12">
-                                        <span className="text-(--neon-pink) font-mono text-lg font-bold bg-(--neon-pink)/10 px-2 py-1 rounded border border-(--neon-pink)/30">{registrationClose}</span>
+                                        <span className="text-(--neon-pink) font-mono text-lg font-bold bg-(--neon-pink)/10 px-2 py-1 rounded border border-(--neon-pink)/30">{prevEventDate()}</span>
                                     </div>
                                     <div className="absolute -left-1.5 md:left-1/2 md:-ml-2 w-4 h-4 bg-black border-2 border-slate-600 group-hover:border-(--neon-pink) rounded-full z-10 group-hover:scale-150 group-hover:bg-(--neon-pink) group-hover:shadow-[0_0_20px_rgba(255,0,85,0.8)] transition-all duration-300"></div>
                                     <div className="pl-8 md:pl-12 w-full md:w-1/2">
                                         <h3 className="text-2xl font-display font-bold text-white group-hover:text-(--neon-pink) transition-colors">TEAM_FORMATION_FREEZE</h3>
                                         <p className="text-slate-400 font-mono text-sm mt-1">Lock your squad configuration.</p>
                                         <div className="md:hidden mt-2">
-                                            <span className="text-(--neon-pink) font-mono text-sm font-bold bg-(--neon-pink)/10 px-2 py-1 rounded border border-(--neon-pink)/30"> {registrationClose} </span>
+                                            <span className="text-(--neon-pink) font-mono text-sm font-bold bg-(--neon-pink)/10 px-2 py-1 rounded border border-(--neon-pink)/30"> {prevEventDate()} </span>
                                         </div>
                                     </div>
                                 </div>
@@ -477,7 +505,7 @@ export default function Landing() {
                                     </div>
                                     <div className="absolute left-1.5 md:left-1/2 md:-ml-2 w-4 h-4 bg-black border-2 border-slate-600 group-hover:border-(--neon-green) rounded-full z-10 group-hover:scale-150 group-hover:bg-(--neon-green) group-hover:shadow-[0_0_20px_rgba(0,255,157,0.8)] transition-all duration-300"></div>
                                     <div className="pl-8 md:pl-12 w-full md:w-1/2">
-                                        <span className="text-(--neon-green) font-mono text-lg font-bold bg-(--neon-green)/10 px-2 py-1 rounded border border-(--neon-green)/30"> {eventDate} </span>
+                                        <span className="text-(--neon-green) font-mono text-lg font-bold bg-(--neon-green)/10 px-2 py-1 rounded border border-(--neon-green)/30"> {eventDateFormatted()} </span>
                                         <div className="md:hidden mt-2">
                                             <h3 className="text-xl font-bold text-white">EVENT_DAY</h3>
                                             <p className="text-slate-400 font-mono text-sm mt-1">Mainnet launch. 5 hours of code.</p>
@@ -527,7 +555,7 @@ export default function Landing() {
                         </div>
                     </section>
 
-                    
+
                 </main>
 
             </div>

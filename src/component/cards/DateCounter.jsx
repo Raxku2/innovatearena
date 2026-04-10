@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { useEventDetailsStore } from '../../stores';
 
 const DateCounter = () => {
+
+
+  const { eventDate, } = useEventDetailsStore();
+
   const [timeLeft, setTimeLeft] = useState({
     days: '00', hours: '00', minutes: '00', seconds: '00'
   });
@@ -13,10 +18,10 @@ const DateCounter = () => {
         // 1. Get True Internet Time for Kolkata
         const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Kolkata');
         const data = await response.json();
-        
+
         const internetTime = new Date(data.datetime).getTime();
         const localTime = new Date().getTime();
-        
+
         // 2. Calculate the "Drift"
         driftRef.current = internetTime - localTime;
         setIsSyncing(false);
@@ -31,7 +36,7 @@ const DateCounter = () => {
 
   useEffect(() => {
     // Target: April 8, 2026 00:00:00 IST
-    const targetDate = new Date('2026-04-08T11:00:00+05:30').getTime();
+    const targetDate = new Date(eventDate).getTime();
 
     const updateTimer = () => {
       // 3. Apply the drift to the current local time to get the "True" time
@@ -64,7 +69,7 @@ const DateCounter = () => {
   return (
     <div className="col-span-1 md:col-span-4 glass-panel border border-slate-700 rounded-xl p-6 flex flex-col justify-center items-center text-center relative overflow-hidden bg-black/40">
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10"></div>
-      
+
       <h3 className="text-slate-400 font-mono text-xs uppercase tracking-[0.2em] mb-4">
         {isSyncing ? 'Syncing_with_Atomic_Clock...' : 'Event_Countdown'}
       </h3>

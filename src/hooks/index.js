@@ -1,3 +1,5 @@
+// hooks
+
 import useGoogleAuth from "./auth/googleAuth"
 import useDepartmentSelector from "./inputs/deptselector"
 import useYearSelector from "./inputs/yearselector"
@@ -7,8 +9,14 @@ import { useUserAuthHook } from "./auth/userAuth"
 import { UseStartup } from "./startup/UseStartup"
 import { useUserDataIO } from "./user/user"
 import { usePdfDownload } from "./user/invoice"
+import ProtectedRoute from "./navigations/useProtectedRoute"
+import { useJudges } from "./judge/useJudges"
+import { useJudgements } from "./judge/useJudgements"
 
 export {
+    useJudgements,
+    useJudges,
+    ProtectedRoute,
     usePdfDownload,
     useAdminControls,
     UseStartup,

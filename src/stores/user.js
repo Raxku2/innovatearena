@@ -23,7 +23,8 @@ const useUserDetailsStore = create((set) => ({
     project_title: null,
     project_deployument: null,
     project_repo: null,
-    project_id:null,
+    project_id: null,
+    judge_role: null,
 
 
     setLogin: (username, email, dp, user_id, actype, teamId) => set({
@@ -65,6 +66,7 @@ const useUserDetailsStore = create((set) => ({
     setProjectDeployment: (param) => set({ project_deployument: param }),
     setProjectRepo: (param) => set({ project_repo: param }),
     setProjectId: (param) => set({ project_id: param }),
+    setJudgeRoll: (param) => set({ judge_role: param }),
 
 }))
 

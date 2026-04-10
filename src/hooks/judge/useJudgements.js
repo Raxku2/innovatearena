@@ -1,0 +1,7 @@
+
+const useJudgements = () => {
+
+
+}
+
+export {useJudgements}
