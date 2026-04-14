@@ -19,7 +19,8 @@ const useUserDataIO = () => {
         setUserPaernerEmail, setUserReg, setLogin, email,
         setPayStatus, settxn, userType, setuserType, setSuper,
         super_mode, setAttendence, setProjectTitle, setProjectDeployment,
-        setProjectRepo, project_id, setProjectId, setJudgeRoll
+        setProjectRepo, project_id, setProjectId, setJudgeRoll,
+        setRejection
 
     } = useUserDetailsStore();
 
@@ -135,6 +136,10 @@ const useUserDataIO = () => {
 
                 if (data.judge !== undefined && data.judge !== null) {
                     setJudgeRoll(data.judge);
+                }
+
+                if (data.rejected !== undefined && data.rejected !== null) {
+                    setRejection(true);
                 }
 
 

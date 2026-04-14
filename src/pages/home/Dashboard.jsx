@@ -36,7 +36,7 @@ export default function Dashboard() {
         department, batch, phone,
         partnerName, partneremail,
         team_id, txnId, userType,
-        partner_status,
+        partner_status, rejected,
 
         setUserName,
         setUserPhone,
@@ -55,6 +55,7 @@ export default function Dashboard() {
         registration_process_status,
         attendence_process_status,
         project_submit_process_status,
+        setAppStatus,
     } = useEventDetailsStore();
 
 
@@ -183,6 +184,13 @@ export default function Dashboard() {
 
     }, []);
 
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        return emailRegex.test(email);
+    }
+
+
     return (
 
 
@@ -192,7 +200,7 @@ export default function Dashboard() {
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6">
 
                 {/* registration progress */}
-                <div className={clsx("col-span-1 md:col-span-8 glass-panel rounded-xl p-6 relative overflow-hidden group", regCardStatus == 0 ? " neon-border-yellow " : " neon-border-cyan ")}>
+                {!rejected && <div className={clsx("col-span-1 md:col-span-8 glass-panel rounded-xl p-6 relative overflow-hidden group", regCardStatus == 0 ? " neon-border-yellow " : " neon-border-cyan ")}>
                     <div className="scan-line-anim opacity-20"></div>
 
                     <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
@@ -233,7 +241,47 @@ export default function Dashboard() {
                             <span className="text-slate-500" >{step > 2 ? "COMPLETED" : `EST. TIME: ${6 / step} MIN`}</span>
                         </div>
                     </div>
-                </div>
+                </div>}
+
+                {rejected && <div className={clsx("col-span-1 md:col-span-8 glass-panel rounded-xl p-6 relative overflow-hidden group neon-border-red")}>
+                    <div className="scan-line-anim opacity-20"></div>
+
+                    <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
+                        <div>
+                            <h3 className={clsx("font-display font-bold text-lg text-wrap tracking-wider mb-1 text-(--neon-red)")} >REGISTRATION_PROTOCOL</h3>
+                            <p className="text-xs font-mono text-slate-400">Unique ID: <span className="text-white">{email}</span></p>
+                        </div>
+
+                        <div className={clsx("px-3 py-1  border text-xs font-mono font-bold rounded animate-pulse bg-(--neon-red)/10 border-red-500/30 text-(--neon-red)")}>
+                            [✘] ELIMINATE
+                        </div>
+                    </div>
+
+
+                    <div className="space-y-2 relative z-10">
+                        <div className="flex justify-between text-xs font-mono text-slate-300">
+                            <span>{"SYSTEM_STATUS"}</span>
+                            <span>!!</span>
+                        </div>
+
+                        <div className="h-2 w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700">
+
+                            <div className={clsx("h-full bg-linear-to-r relative from-(--neon-pink) to-(--neon-red)  shadow-[0_0_10px_var(--neon-red)]",
+
+                            )}
+                                style={{ width: `${progress}%` }}
+                            >
+                                <div className="absolute inset-0 bg-white/30 animate-[loading_2s_ease-in-out_infinite]"></div>
+                            </div>
+
+                        </div>
+
+                        <div className={clsx("flex justify-between text-[10px] font-mono mt-1 text-(--neon-red)")}>
+                            <span>{"FATAL ERROR - INITIATIVE REJECTED - TEAM WIPED"}</span>
+                            <span className="text-slate-500" >{"REJECTED"}</span>
+                        </div>
+                    </div>
+                </div>}
 
                 {/* time counter */}
                 <DateCounter />
@@ -410,8 +458,6 @@ export default function Dashboard() {
                                     onChange={e => setUserPaernerName(e.target.value)}
                                 />
 
-
-
                                 <p className="text-neon-pink text-xs font-mono">{
                                 }</p>
                                 <span
@@ -426,8 +472,9 @@ export default function Dashboard() {
                                         value={partneremail}
                                         onChange={e => setUserPaernerEmail(e.target.value)}
                                         placeholder='> PARTNER_EMAIL'
-                                        type="text" name="" id="" />]
+                                        type="email" name="" id="" />]
                                 </span>
+
                             </div>
 
                         </div>
@@ -440,6 +487,10 @@ export default function Dashboard() {
                                 className="w-full py-2 bg-neon-pink/10 hover:bg-neon-pink/20 border border-neon-pink/50 text-neon-pink text-xs font-bold uppercase transition-all flex items-center justify-center gap-2"
                                 hidden={peymentStatus || partner_status}
                                 onClick={() => {
+                                    if (!isValidEmail(partneremail)) {
+                                        setAppStatus("invalid email")
+                                        return
+                                    }
                                     enableLoadingBar();
                                     createPartner();
                                 }}

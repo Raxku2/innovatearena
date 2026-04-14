@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { JudgeAssign, SubmitContainers } from '../../component';
+import { JudgeAssign, JudgedContainer, SubmitContainers } from '../../component';
 import { useUserDetailsStore } from '../../stores';
 import { useNavigate } from 'react-router';
 
@@ -12,7 +12,7 @@ export default function Judge() {
         if (userType) {
             if (userType == 'root' || judge_role) {
                 return
-            }else{
+            } else {
                 navigate('/');
             }
         }
@@ -31,6 +31,12 @@ export default function Judge() {
                 {judge_role && (
                     <div className="col-span-1 md:col-span-6 glass-panel border neon-border-cyan rounded-xl relative overflow-hidden group flex flex-col">
                         <SubmitContainers />
+                    </div>
+                )}
+
+                {judge_role && (
+                    <div className="col-span-1 md:col-span-6 glass-panel border neon-border-pink rounded-xl relative overflow-hidden group flex flex-col">
+                        <JudgedContainer />
                     </div>
                 )}
 

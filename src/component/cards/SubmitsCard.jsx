@@ -56,11 +56,11 @@ export default function SubmitsCard({ project_info }) {
                         <div className="space-y-1 mb-4">
                             <div className="flex items-center gap-2 text-xs font-mono">
                                 <span className="text-slate-500">UPLINK:</span>
-                                <a className="text-primary hover:underline truncate" href={deployment}>{deployment}</a>
+                                <a className="text-primary hover:underline truncate" href={deployment} target='_blank'>{deployment}</a>
                             </div>
                             <div className="flex items-center gap-2 text-xs font-mono">
                                 <span className="text-slate-500">SOURCE:</span>
-                                <a className="text-slate-300 hover:text-white truncate" href={repo}>{repo}</a>
+                                <a className="text-slate-300 hover:text-white truncate" href={repo} target='_blank'>{repo}</a>
                             </div>
                         </div>
                     </div>
