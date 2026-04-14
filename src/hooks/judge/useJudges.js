@@ -1,8 +1,6 @@
 import { useEventDetailsStore, useJudgesStore } from "../../stores";
 
 const useJudges = () => {
-
-
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
     const { setJudges } = useJudgesStore();
     const { setAppStatus } = useEventDetailsStore();
@@ -11,15 +9,12 @@ const useJudges = () => {
     } = useEventDetailsStore();
 
     const loadAllJudges = async () => {
-        // return
         try {
-
             const res = await fetch(`${BACKEND_API}/root/admins/judge`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                // body: JSON.stringify(payload)
             })
 
             const status = res.status
@@ -28,30 +23,23 @@ const useJudges = () => {
 
                 if (status === 200) {
                     const data = await res.json()
-                    console.log(data);
-
+                    // console.log(data);
                     setJudges(data)
                     setAppStatus("Judges fetched")
-
                 }
 
                 if (status === 304) {
                     setAppStatus("data matched")
                 }
 
-                // await getFullUserInfo()
                 return
             }
 
-            console.log(status)
-            setJudges([])
+            setJudges([]);
             setAppStatus("try again")
-
         } catch (error) {
-
             console.error("Profile fetch failed:", error)
             setAppStatus("try again")
-
         }
     }
 
@@ -83,7 +71,7 @@ const useJudges = () => {
                 return
             }
 
-            console.log(status)
+            // console.log(status)
             setAppStatus("try again")
             disableLoadingBar();
 
@@ -125,7 +113,7 @@ const useJudges = () => {
                 return
             }
 
-            console.log(status)
+            // console.log(status)
             setAppStatus("try again")
             disableLoadingBar();
 

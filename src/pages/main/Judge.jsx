@@ -29,7 +29,7 @@ export default function Judge() {
                 )}
 
                 {judge_role && (
-                    <div className="col-span-1 md:col-span-7 glass-panel border neon-border-cyan rounded-xl relative overflow-hidden group flex flex-col">
+                    <div className="col-span-1 md:col-span-6 glass-panel border neon-border-cyan rounded-xl relative overflow-hidden group flex flex-col">
                         <SubmitContainers />
                     </div>
                 )}

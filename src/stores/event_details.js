@@ -21,6 +21,9 @@ const useEventDetailsStore = create((set) => ({
   attendence_process_status: false,
   project_submit_process_status: false,
   attendanceCount: null,
+  pos_A: null,
+  pos_B: null,
+  pos_C: null,
 
 
   enableLoadingBar: () => set({ LoadingBar: true }),
@@ -37,6 +40,9 @@ const useEventDetailsStore = create((set) => ({
   setProject: (params) => set({ project_submit_process_status: params }),
   setAttendanceCount: (params) => set({ attendanceCount: params }),
   setEventDate: (params) => set({ eventDate: params }),
+  setPositionA: (params) => set({ pos_A: params }),
+  setPositionB: (params) => set({ pos_B: params }),
+  setPositionC: (params) => set({ pos_C: params }),
 
 }))
 
