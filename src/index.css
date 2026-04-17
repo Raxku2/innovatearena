@@ -472,3 +472,18 @@ html {
     background: linear-gradient(to bottom, transparent 0%, rgba(0, 243, 255, 0.05) 50%, transparent 100%);
     background-size: 100% 200%;
 }
+
+.glitch-cyan {
+    text-shadow: 2px 0 #00f3ff, -2px 0 #ff0055;
+}
+
+.laser-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00f3ff, transparent);
+    width: 100%;
+    position: absolute;
+}
+
+.laser-line-pink {
+    background: linear-gradient(90deg, transparent, #ff0055, transparent);
+}
