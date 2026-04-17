@@ -288,7 +288,8 @@ export default function Dashboard() {
 
 
                 {/* discord Comunity   link  */}
-                {peymentStatus &&
+                {/* {peymentStatus && */}
+                {false &&
                     <a
                         href="https://discord.gg/shXC8mcrhd"
                         target="_blank"
@@ -656,7 +657,7 @@ export default function Dashboard() {
                             {/* <ScheduleCard time_prop="10:00" title_prop="Meeting" id_prop="1" /> */}
 
                             {
-                                schedules.map((e, i) => {
+                                schedules && schedules.map((e, i) => {
                                     // console.log(e);
 
                                     return (

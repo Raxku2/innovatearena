@@ -230,7 +230,7 @@ export default function RefundPolicy() {
                             </div>
                             <div>
                                 <p className="font-bold mb-1">EMERGENCY_VOICE_LINE</p>
-                                <p className="text-lg">+91 76792 83874 <span className="text-xs text-gray-500 ml-2">(Mon-Fri, 1000 - 2000 IST)</span></p>
+                                <p className="text-lg">+91 81161 38486 <span className="text-xs text-gray-500 ml-2">(Mon-Fri, 1000 - 2000 IST)</span></p>
                             </div>
                             <div className="md:col-span-2 pt-6 border-t-2 border-black">
                                 <p className="font-bold mb-2">PHYSICAL_NODE</p>
