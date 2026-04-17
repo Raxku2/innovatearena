@@ -1,5 +1,6 @@
 // Components
 
+import NotFound from "../pages/essentials/NotFound";
 import AdminController from "./cards/AdminController";
 import AdminIdCard from "./cards/AdminIdCard";
 import AttendenceCard from "./cards/AttendenceCard";
@@ -25,8 +26,8 @@ import Navbar1 from "./header/Navbar1";
 import Navbar2 from "./header/Navbar2";
 import AiemSnakeLoader from "./loading/aiem_loading";
 
-
 export {
+    NotFound,
     JudgedSubmitCard,
     JudgedContainer,
     JudgeCard,

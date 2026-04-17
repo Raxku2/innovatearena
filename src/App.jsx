@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import AiemSnakeLoader from './component/loading/aiem_loading'
 import { AuthPage, Cirtificates, Dashboard, Home, Judge, PrivecyPolicy, RefundPolicy, Terms } from './pages'
-import { Footer1, Invoice, Navbar1 } from './component'
+import { Footer1, Invoice, Navbar1, NotFound } from './component'
 import { AnimatePresence } from 'motion/react'
 import { Link, Route, Routes, useLocation } from "react-router"
 import { useEventDetailsStore, useUserDetailsStore } from './stores'
@@ -86,6 +86,11 @@ export default function App() {
           <Route
             path='/refund'
             element={<RefundPolicy />}
+          />
+
+          <Route
+            path='*'
+            element={<NotFound />}
           />
 
 
