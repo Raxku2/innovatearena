@@ -68,7 +68,7 @@ const useJudgements = () => {
     }
 
     const saveJudgemment = async (data, project_id) => {
-        console.log(data, project_id);
+        // console.log(data, project_id);
         // return
         enableLoadingBar();
 
@@ -150,7 +150,7 @@ const useJudgements = () => {
             }
 
             disableLoadingBar();
-            console.log(status)
+            // console.log(status)
 
         } catch (error) {
             await loadAllSubmits();
@@ -180,7 +180,7 @@ const useJudgements = () => {
 
                 if (status === 200) {
                     const data = await res.json()
-                    console.log(data);
+                    // console.log(data);
                     setJudgements(data);
                     // disableLoadingBar();
                     return
