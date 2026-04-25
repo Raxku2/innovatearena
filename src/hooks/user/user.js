@@ -20,7 +20,7 @@ const useUserDataIO = () => {
         setPayStatus, settxn, userType, setuserType, setSuper,
         super_mode, setAttendence, setProjectTitle, setProjectDeployment,
         setProjectRepo, project_id, setProjectId, setJudgeRoll,
-        setRejection
+        setRejection, setPos, setMarks, setJudgement, setPresent
 
     } = useUserDetailsStore();
 
@@ -140,6 +140,22 @@ const useUserDataIO = () => {
 
                 if (data.rejected !== undefined && data.rejected !== null) {
                     setRejection(true);
+                }
+
+                if (data.pos !== undefined && data.pos !== null) {
+                    setPos(data.pos);
+                }
+
+                if (data.marks !== undefined && data.marks !== null) {
+                    setMarks(data.marks);
+                }
+
+                if (data.judgement !== undefined && data.judgement !== null) {
+                    setJudgement(data.judgement);
+                }
+
+                if (data.present !== undefined && data.present !== null) {
+                    setPresent(data.present);
                 }
 
 

@@ -4,7 +4,14 @@ import { useUserDataIO } from "../user/user";
 const UseStartup = () => {
 
     const BACKEND_API = import.meta.env.VITE_BACKEND_API;
-    const { setEventOrga, setEventRules, setEventSchedules, setRegistration, setAttendence, setProject, setEventDate, setPositionA, setPositionB, setPositionC } = useEventDetailsStore();
+    const {
+        setEventOrga, setEventRules,
+        setEventSchedules, setRegistration,
+        setAttendence, setProject,
+        setEventDate, setPositionA,
+        setPositionB, setPositionC,
+        setCertificateRelease
+    } = useEventDetailsStore();
 
     const getEventData = async () => {
         try {
@@ -31,6 +38,12 @@ const UseStartup = () => {
 
                 if (data.pos_C) {
                     setPositionC(true);
+                }
+
+                if (data.certificate) {
+                    // setPositionC(true);
+                    setCertificateRelease(data.certificate)
+
                 }
 
             }
