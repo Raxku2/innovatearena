@@ -12,8 +12,10 @@ import { usePdfDownload } from "./user/invoice"
 import ProtectedRoute from "./navigations/useProtectedRoute"
 import { useJudges } from "./judge/useJudges"
 import { useJudgements } from "./judge/useJudgements"
+import { useCertificateGenerator } from "./certificate/useCertificate"
 
 export {
+    useCertificateGenerator,
     useJudgements,
     useJudges,
     ProtectedRoute,

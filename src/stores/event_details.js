@@ -24,6 +24,7 @@ const useEventDetailsStore = create((set) => ({
   pos_A: null,
   pos_B: null,
   pos_C: null,
+  certificate_release: false,
 
 
   enableLoadingBar: () => set({ LoadingBar: true }),
@@ -43,6 +44,7 @@ const useEventDetailsStore = create((set) => ({
   setPositionA: (params) => set({ pos_A: params }),
   setPositionB: (params) => set({ pos_B: params }),
   setPositionC: (params) => set({ pos_C: params }),
+  setCertificateRelease: (params) => set({ certificate_release: params }),
 
 }))
 
