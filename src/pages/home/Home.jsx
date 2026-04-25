@@ -144,9 +144,9 @@ export default function Home() {
                             isActive ? "active" : ""
                           )
                         }
-                        hidden
+                        
                       >
-                        <span className="material-symbols-outlined text-lg">workspace_premium</span>
+                        <span className="material-symbols-outlined text-lg">school</span>
                         <span>CERTIFICATE</span>
                       </NavLink>
 

@@ -3,15 +3,15 @@ import { create } from 'zustand'
 const useEventDetailsStore = create((set) => ({
   LoadingBar: true,
   AppStatus: "SYSTEM READY",
-  eventDuration: 3,
+  eventDuration: 5,
   eventDomains: 6,
   eventPrize: 2.0,
   venuePhoto: "https://www.abacusinstitute.org/images/slider/slide1.jpg",
   venueLocation: "MAGRA_CAMPUS // ABACUS INSTITUTE",
   teamSize: "1-2",
   registrationOpen: 'MARCH 5',
-  registrationClose: 'APRIL 20',
-  eventDate: 'APRIL 21',
+  registrationClose: 'APRIL 26',
+  eventDate: 'APRIL 27',
   eventOrganizers: [],
   rules: [],
   matrix: null,
@@ -24,6 +24,7 @@ const useEventDetailsStore = create((set) => ({
   pos_A: null,
   pos_B: null,
   pos_C: null,
+  certificate_release: false,
 
 
   enableLoadingBar: () => set({ LoadingBar: true }),
@@ -43,6 +44,7 @@ const useEventDetailsStore = create((set) => ({
   setPositionA: (params) => set({ pos_A: params }),
   setPositionB: (params) => set({ pos_B: params }),
   setPositionC: (params) => set({ pos_C: params }),
+  setCertificateRelease: (params) => set({ certificate_release: params }),
 
 }))
 

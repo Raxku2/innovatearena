@@ -154,12 +154,7 @@ const useInnovateArenaPayment = () => {
             console.log(orderToken.status);
             if (orderToken.status == 201) {
                 const order = await orderToken.json();
-                // console.log(order);
                 window.location.href = REDION + '/panoroma/' + order
-                // console.log(REDION);
-
-                // disableLoadingBar();
-
             }
         } catch (error) {
             console.log(error);
@@ -199,7 +194,6 @@ const useInnovateArenaPayment = () => {
             console.error("Profile fetch failed:", error);
             disableLoadingBar()
         }
-
     }
 
 

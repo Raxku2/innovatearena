@@ -26,6 +26,10 @@ const useUserDetailsStore = create((set) => ({
     project_id: null,
     judge_role: null,
     rejected: false,
+    pos: 0,
+    marks: 0,
+    present: false,
+    judgement: false,
 
 
     setLogin: (username, email, dp, user_id, actype, teamId) => set({
@@ -69,6 +73,10 @@ const useUserDetailsStore = create((set) => ({
     setProjectId: (param) => set({ project_id: param }),
     setJudgeRoll: (param) => set({ judge_role: param }),
     setRejection: (param) => set({ rejected: param }),
+    setPos: (param) => set({ pos: param }),
+    setMarks: (param) => set({ marks: param }),
+    setJudgement: (param) => set({ judgement: param }),
+    setPresent: (param) => set({ present: param }),
 
 }))
 
